@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 class DClass {
     private static ArrayList<Class> cls=new ArrayList<>();
+
     public static class Class{
         private String name;
         private ArrayList<DFunction> static_func=new ArrayList<>(),
@@ -16,6 +17,13 @@ class DClass {
                 dymastic_func.add(function);
             else
                 static_func.add(function);
+        }
+        public String runFunction(String name, DFunction.ParamIns[] paramIns){
+            for(DFunction func : static_func)
+                if(func.getName().equals(name)) {
+                    return func.run(paramIns);
+                }
+            return null;
         }
 
     }
@@ -35,6 +43,14 @@ class DClass {
 
     static void createClass(String name){
         cls.add(new Class(name));
+    }
+    static Class getClassByName(String name){
+        for (int i = 0; i < cls.size(); i++) {
+            if(name.equals(cls.get(i).name)){
+                return cls.get(i);
+            }
+        }
+        return null;
     }
     static void importClass(){
 

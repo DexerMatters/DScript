@@ -18,7 +18,7 @@ public class Main {
                                 "a=b;";
         DComplier dc=new DComplier(new DCode(str));
         dc.compileWithoutPretreatment();
-        System.out.println(6|24);
+        System.out.println(24|6);
     }
 
 }
