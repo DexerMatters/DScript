@@ -12,10 +12,10 @@ public class Main {
 //            System.out.println(n.getContent()+"     "+n.getCondition());
 //        }
         String str=
-                                "var a=123;\n" +
+                                "var a=\"aaa\";\n" +
                                 "var b=556;\n" +
                                 "b=45623;\n" +
-                                "a=b;";
+                                "System.output(\"I Like Pineapple\");";
         DComplier dc=new DComplier(new DCode(str));
         dc.compileWithoutPretreatment();
         System.out.println(24|6);

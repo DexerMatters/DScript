@@ -20,7 +20,7 @@ public class DFunction {
         }
     }
     static class NativeCode{
-        public String run(ParamIns[] pi){
+        public ParamIns run(ParamIns[] pi){
             return null;
         };
     }
@@ -45,7 +45,7 @@ public class DFunction {
         //else this.code_str=(String) code;
 
     }
-    public String run(ParamIns[] ins){
+    public ParamIns run(ParamIns[] ins){
         if(ins.length==params.length)
             for (int i = 0; i < ins.length; i++) {
                 if(!ins[i].type.equals(params[i].type)) {
@@ -54,7 +54,7 @@ public class DFunction {
             }
         if(code_code!=null)
             return code_code.run(ins);
-        return code_str;
+        return null;
     }
 
     public String getName() {

@@ -1,8 +1,8 @@
 package com.dexer.dscript;
 
 import java.util.ArrayList;
-
-public interface DVariable extends DReference{
+import static com.dexer.dscript.DReference.*;
+public interface DVariable{
     class Variable{
         String type;
         String value;
