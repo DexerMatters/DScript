@@ -70,7 +70,9 @@ public class DClass {
         }
         return null;
     }
+    static int index=0;
     static String getTypeOf(String str){
+        index=0;
         if(str.matches("^\".*\"$"))
             return "String";
         if(str.matches("^-?[0-9]+$"))
@@ -79,8 +81,10 @@ public class DClass {
             return "Float";
         if(str.matches("^(true|false)$"))
             return "Boolean";
-        if(isEquation(str))
-            return "equation";
+        if((index=isEquality(str))!=-1)
+            return "equality";
+        if((index=isInequality(str))!=-1)
+            return "inequality";
         if(str.matches("^[a-zA-Z_]+$"))
             return "variable";
         return "Unknown";
@@ -90,8 +94,10 @@ public class DClass {
             case "variable":
                 Variable var= getVariableByName(str, area_id, layout_id);
                 return new ParamIns(var.type,var.value);
-            case "equation":
-                return getEquationResult(str,area_id,layout_id);
+            case "equality":
+                return getEqualityResult(str,area_id,layout_id);
+            case "inequality":
+                return getInequalityResult(str,area_id,layout_id);
         }
 
         return new ParamIns(getTypeOf(str),str);
