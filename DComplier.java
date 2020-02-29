@@ -34,8 +34,8 @@ public class DComplier implements DVariable{
         String code_str=code.getCode();
         String line="";
         createClass("System");
-        getClassByName("System").addFunction(new DFunction("output","Void",
-                new Param[]{new Param("String","str")}, STATIC|NATIVE,
+        getClassByName("System").addFunction(new DFunction("output",
+                new Param[]{new Param("Object","str")}, STATIC|NATIVE,
                 new DFunction.NativeCode(){
                     @Override
                     public ParamIns run(ParamIns[] pi) {
@@ -57,7 +57,7 @@ public class DComplier implements DVariable{
 
         }
         //reassignToVal(getVariableByName("a",0,0),"String","4567");
-        debug(vars);
+        //debug(vars);
     }
     public void onError(String message){
         System.out.println(message);

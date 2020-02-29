@@ -18,6 +18,11 @@ public class DFunction {
             this.value=value;
             this.type=type;
         }
+
+        @Override
+        public boolean equals(Object obj) {
+            return this.value.equals(((ParamIns) obj).value);
+        }
     }
     static class NativeCode{
         public ParamIns run(ParamIns[] pi){
@@ -25,7 +30,6 @@ public class DFunction {
         };
     }
     private Param[] params;
-    private String return_type;
     private int state;
     private NativeCode code_code=null;
     private String code_str=null;
@@ -35,9 +39,8 @@ public class DFunction {
     public static final int NATIVE=6;
     //NATIVE STATIC 14
     //NATIVE DYNASTIC 30
-    DFunction(String name,String return_type, Param[] params, int state, Object code){
+    DFunction(String name,Param[] params, int state, Object code){
         this.params=params;
-        this.return_type=return_type;
         this.state=state;
         this.name=name;
         if(state==6||state==14||state==30)
@@ -48,7 +51,7 @@ public class DFunction {
     public ParamIns run(ParamIns[] ins){
         if(ins.length==params.length)
             for (int i = 0; i < ins.length; i++) {
-                if(!ins[i].type.equals(params[i].type)) {
+                if(!(ins[i].type.equals(params[i].type)||params[i].type.equals("Object"))) {
                     return null;
                 }
             }
@@ -63,10 +66,6 @@ public class DFunction {
 
     public Param[] getParams() {
         return params;
-    }
-
-    public String getReturnType() {
-        return return_type;
     }
 
     public int getState() {

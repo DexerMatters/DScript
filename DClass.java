@@ -6,6 +6,7 @@ import java.util.List;
 import static com.dexer.dscript.DReference.*;
 import static com.dexer.dscript.DVariable.*;
 import static com.dexer.dscript.DFunction.*;
+import static com.dexer.dscript.DExpression.*;
 public class DClass {
     private static ArrayList<Class> cls=new ArrayList<>();
 
@@ -48,17 +49,20 @@ public class DClass {
                 if(mode==0)
                     name+=strs[1].charAt(i);
             }
-
             for (int i = 0; i < params.length(); i++) {
                 if(params.charAt(i)==','&&!hasCovered(str,i,BRACLET_STRING)){
                     pis.add(requireReturn(param,area_id,layout_id));
                     param="";
-                }else
-                    param+=params.charAt(i);
-                if(i==params.length()-2)
-                    pis.add(requireReturn(param,area_id,layout_id));
+                }else {
+                    //System.out.println(param);
+                    param += params.charAt(i);
+                }
+                if(i==params.length()-1) {
+                    pis.add(requireReturn(param, area_id, layout_id));
+
+                }
             }
-            DComplier.debug(pis);
+            //DComplier.debug(pis);
             ParamIns[] array = pis.toArray(new ParamIns[pis.size()]);
             return getClassByName("System").runFunction(name,array);
 
@@ -74,16 +78,20 @@ public class DClass {
         if(str.matches("^-?[0-9]+\\.[0-9]+$"))
             return "Float";
         if(str.matches("^(true|false)$"))
-            return "Boolearn";
+            return "Boolean";
+        if(isEquation(str))
+            return "equation";
         if(str.matches("^[a-zA-Z_]+$"))
             return "variable";
-        return null;
+        return "Unknown";
     }
     static ParamIns requireReturn(String str, int area_id, int layout_id){
-
-        if(getTypeOf(str).equals("variable")) {
-            Variable var= getVariableByName(str, area_id, layout_id);
-            return new ParamIns(var.type,var.value);
+        switch (getTypeOf(str)){
+            case "variable":
+                Variable var= getVariableByName(str, area_id, layout_id);
+                return new ParamIns(var.type,var.value);
+            case "equation":
+                return getEquationResult(str,area_id,layout_id);
         }
 
         return new ParamIns(getTypeOf(str),str);

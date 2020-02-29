@@ -12,13 +12,13 @@ public class Main {
 //            System.out.println(n.getContent()+"     "+n.getCondition());
 //        }
         String str=
-                                "var a=\"aaa\";\n" +
-                                "var b=556;\n" +
-                                "b=45623;\n" +
-                                "System.output(\"I Like Pineapple\");";
+                                        "var a=233;\n" +
+                                        "var b=233;\n" +
+                                        "var c=a==b;\n" +
+                                        "System.output(c);";
         DComplier dc=new DComplier(new DCode(str));
         dc.compileWithoutPretreatment();
-        System.out.println(24|6);
+        //System.out.println(DExpression.isEquation("a==f"));
     }
 
 }

@@ -1,5 +1,7 @@
 package com.dexer.dscript;
 import java.util.Arrays;
+
+import static com.dexer.dscript.DClass.requireReturn;
 import static com.dexer.dscript.DVariable.*;
 public class DReference{
     public static char[]
