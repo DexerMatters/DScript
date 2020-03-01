@@ -7,5 +7,6 @@ public class DError {
     public DError(DComplier complier,String type){
         if(type.equals("type"))
             complier.onError("Type error");
+        System.exit(0);
     }
 }

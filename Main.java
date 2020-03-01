@@ -18,10 +18,11 @@ public class Main {
         String str=
 
                 "" +
-                        "var a=232;\n" +
-                        "var c=21;\n" +
-                        "var b=a;\n" +
-                        "System.output(System.add(c,b));";
+                        "var a=\"232\";\n" +
+                        "var b=(Integer) a;\n" +
+                        "System.output(b++);" +
+                        "System.output((String) b);\n" +
+                        "";
         DComplier dc=new DComplier(new DCode(str)){
             @Override
             public void preLoad() {

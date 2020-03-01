@@ -14,7 +14,6 @@ public class DReference{
         vars.get(indexOf(leftV)).value=rightV.value;
     }
     public static void reassignToVal(Variable leftV,String type,String value,int area_id,int layout_id){
-        System.out.println(value);
         vars.get(indexOf(leftV)).value=requireReturn(value,area_id,layout_id).value;
     }
     public static String getTypeByName(String name,int area_id,int layout_id){
@@ -71,6 +70,7 @@ public class DReference{
             return right == left && right + left != 0;
         } else return left%2!=0||right%2!=0;
     }
+
     public static int indexOf(Variable var){
         int ptr=-1;
         for(Variable v : vars){

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import static com.dexer.dscript.DClass.*;
 import static com.dexer.dscript.DFunction.*;
 import static com.dexer.dscript.DReference.*;
-import static com.dexer.dscript.DClass.*;
-public class DComplier implements DVariable{
+import static com.dexer.dscript.DVariable.*;
+public class DComplier{
     private DNode main_node=new DNode();
     private int times=0;
     DCode code;
@@ -36,12 +36,12 @@ public class DComplier implements DVariable{
         String line="";
         preLoad();
         //getClassByName("System").runFunction("output",new ParamIns[]{new ParamIns("String","hello")});
-
         for (int i = 0; i < code_str.length(); i++) {
             if(code_str.charAt(i)==';'&&!hasCovered(code_str,i,BRACLET_STRING)){
                 line=line.trim();
                 importVariable(line,0,0);
                 assignVariable(line,0,0);
+                assignVariableAs(line,0,0);
                 runFunction(line,0,0);
                 line="";
             }else

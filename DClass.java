@@ -84,6 +84,8 @@ public class DClass {
             return "Boolean";
         if(str.matches("^\\w+\\.\\w+\\(.*\\)$"))
             return "function";
+        if(str.matches("(.+&&.+|.+\\|\\|.+)"))
+            return "bool_expression";
         if((index=isEquality(str))!=-1)
             return "equality";
         if((index=isInequality(str))!=-1)
@@ -99,10 +101,14 @@ public class DClass {
                 return new ParamIns(var.type,var.value);
             case "function":
                 return runFunction(str,area_id,layout_id);
+            case "bool_expression":
+                return getBoolExpressionResult(str,area_id,layout_id);
             case "equality":
                 return getEqualityResult(str,area_id,layout_id);
             case "inequality":
                 return getInequalityResult(str,area_id,layout_id);
+            case "expression":
+                return getExpressionResult(str, area_id, layout_id);
         }
 
         return new ParamIns(getTypeOf(str),str);

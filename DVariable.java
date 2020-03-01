@@ -3,8 +3,9 @@ package com.dexer.dscript;
 import java.util.ArrayList;
 import static com.dexer.dscript.DReference.*;
 import static com.dexer.dscript.DClass.*;
-public interface DVariable{
-    class Variable{
+import static com.dexer.dscript.DExpression.*;
+public class DVariable{
+    static class Variable{
         String type;
         String value;
         String name;
@@ -12,8 +13,8 @@ public interface DVariable{
         int layout_id;
     }
 
-    ArrayList<Variable> vars=new ArrayList<>();
-    default void importVariable(String var_str, int area_id,int layout_id){
+    static ArrayList<Variable> vars=new ArrayList<>();
+    static void importVariable(String var_str, int area_id,int layout_id){
         Variable var=new Variable();
         var.area_id=area_id;
         var.layout_id=layout_id;
@@ -31,7 +32,7 @@ public interface DVariable{
             }
         }
     }
-    default void assignVariable(String str, int area_id,int layout_id) {
+    static void assignVariable(String str, int area_id,int layout_id) {
         if (str.matches("^[\\W\\w_\\d]+\\s*=\\s*.+$")) {
             String[] strs = addBehind(str.split("="),"=");
 
@@ -43,7 +44,33 @@ public interface DVariable{
                 reassignToVal(getVariableByName(strs[0], area_id, layout_id), DClass.getTypeOf(strs[1]), strs[1], area_id, layout_id);
         }
     }
-    default Variable createVariable(String type,String name,String value,int area_id,int layout_id){
+    static String assignVariableAs(String str,int area_id,int layout_id){
+        if(str.matches("^.+\\s*[+\\-][+\\-]$")){
+            String temp=cleanBracket(str.substring(0,str.length()-2).trim());
+            String sym=str.substring(str.length()-2).trim();
+            Variable v=getVariableByName(temp,area_id,layout_id);
+            if(v.type.equals("Integer")) {
+                int del= sym.equals("++")?1:-1;
+                reassignToVal(v, "Integer", String.valueOf(Integer.parseInt(v.value) + del), area_id, layout_id);
+                return getVariableByName(temp,area_id,layout_id).value;
+            }
+            else new DError(comp,"type");
+        }
+        if(str.matches("^[+\\-][+\\-]\\s*.+$")){
+            String temp=str.substring(2).trim();
+            String sym=str.substring(0,2).trim();
+            Variable v=getVariableByName(temp,area_id,layout_id);
+            if(v.type.equals("Integer")) {
+                int del= sym.equals("++")?1:-1;
+                String v_=v.value;
+                reassignToVal(v, "Integer", String.valueOf(Integer.parseInt(v.value) + del), area_id, layout_id);
+                return v_;
+            }
+            else new DError(comp,"type");
+        }
+        return null;
+    }
+    static Variable createVariable(String type,String name,String value,int area_id,int layout_id){
         Variable v=new Variable();
         v.name=name;
         v.type=type;
@@ -52,7 +79,7 @@ public interface DVariable{
         v.layout_id=layout_id;
         return v;
     }
-    default int indexOf(Variable var){
+    static int indexOf(Variable var){
         int ptr=-1;
         for(Variable v : vars){
             ptr++;
