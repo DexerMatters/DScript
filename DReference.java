@@ -13,12 +13,9 @@ public class DReference{
     public static void reassignToVar(Variable leftV, Variable rightV){
         vars.get(indexOf(leftV)).value=rightV.value;
     }
-    public static void reassignToVal(Variable leftV,String type,String value){
-        if(!leftV.type.equals(type)) {
-            new DError(comp, "type");
-            return;
-        }
-        vars.get(indexOf(leftV)).value=value;
+    public static void reassignToVal(Variable leftV,String type,String value,int area_id,int layout_id){
+        System.out.println(value);
+        vars.get(indexOf(leftV)).value=requireReturn(value,area_id,layout_id).value;
     }
     public static String getTypeByName(String name,int area_id,int layout_id){
         String r=null;

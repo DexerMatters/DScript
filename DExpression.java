@@ -53,10 +53,17 @@ public class DExpression {
     public static ParamIns getInequalityResult(String str,int area_id,int layout_id){
         int index=isInequality(str);
         String sym=str.charAt(index)+""+str.charAt(index+1);
-        String[] strs={
-                str.substring(0,index).trim(),
-                str.substring(index+2).trim()
-        };
+        String[] strs;
+        if(sym.charAt(1)=='=')
+            strs= new String[]{
+                    str.substring(0, index).trim(),
+                    str.substring(index + 2).trim()
+            };
+        else
+            strs= new String[]{
+                    str.substring(0, index).trim(),
+                    str.substring(index + 1).trim()
+            };
         int A=Integer.parseInt(requireReturn(strs[0], layout_id, area_id).value);
         int B=Integer.parseInt(requireReturn(strs[1], layout_id, area_id).value);
 
@@ -67,9 +74,9 @@ public class DExpression {
         else if(sym.equals("!="))
             return new ParamIns("Boolean",Boolean.toString(A!=B));
         else if(sym.charAt(0)=='<')
-            return new ParamIns("Boolean",Boolean.toString(A<=B));
+            return new ParamIns("Boolean",Boolean.toString(A<B));
         else if(sym.charAt(0)=='>')
-            return new ParamIns("Boolean",Boolean.toString(A>=B));
+            return new ParamIns("Boolean",Boolean.toString(A>B));
         return null;
     }
 

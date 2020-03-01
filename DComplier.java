@@ -30,19 +30,11 @@ public class DComplier implements DVariable{
             }
         }
     }
+    public void preLoad(){}
     public void compileWithoutPretreatment(){
         String code_str=code.getCode();
         String line="";
-        createClass("System");
-        getClassByName("System").addFunction(new DFunction("output",
-                new Param[]{new Param("Object","str")}, STATIC|NATIVE,
-                new DFunction.NativeCode(){
-                    @Override
-                    public ParamIns run(ParamIns[] pi) {
-                        System.out.println(pi[0].value);
-                        return new ParamIns("Void",null);
-                    }
-                }));
+        preLoad();
         //getClassByName("System").runFunction("output",new ParamIns[]{new ParamIns("String","hello")});
 
         for (int i = 0; i < code_str.length(); i++) {

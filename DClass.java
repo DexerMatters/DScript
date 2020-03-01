@@ -33,24 +33,25 @@ public class DClass {
         }
 
     }
-    static ParamIns runFunction(String str,int layout_id,int area_id){
-        if(str.matches("\\w+\\.\\w+\\(.*\\)")){
+    static ParamIns runFunction(String str,int area_id,int layout_id){
+
+        if(str.matches("^\\w+\\.\\w+\\(.*\\)$")){
             String[] strs=str.split("\\.");
+            strs=addBehind(strs,".");
             int mode=0;
             String params="",name="",param="";
             ArrayList<ParamIns> pis=new ArrayList<>();
             for(int i=0;i<strs[1].length();i++){
-                if(strs[1].charAt(i)==')'&&!hasCovered(str,i,BRACLET_STRING))
-                    break;
+                if(i==strs[1].length()-1) break;
                 if(mode==1)
                     params+=strs[1].charAt(i);
-                if(strs[1].charAt(i)=='(')
+                if(strs[1].charAt(i)=='('&&mode!=1)
                     mode = 1;
                 if(mode==0)
                     name+=strs[1].charAt(i);
             }
             for (int i = 0; i < params.length(); i++) {
-                if(params.charAt(i)==','&&!hasCovered(str,i,BRACLET_STRING)){
+                if(params.charAt(i)==','&&!hasCovered(params,i,BRACLET_STRING)&&!hasCovered(params,i,BRACKET_NORMAL)){
                     pis.add(requireReturn(param,area_id,layout_id));
                     param="";
                 }else {
@@ -81,19 +82,23 @@ public class DClass {
             return "Float";
         if(str.matches("^(true|false)$"))
             return "Boolean";
+        if(str.matches("^\\w+\\.\\w+\\(.*\\)$"))
+            return "function";
         if((index=isEquality(str))!=-1)
             return "equality";
         if((index=isInequality(str))!=-1)
             return "inequality";
         if(str.matches("^[a-zA-Z_]+$"))
             return "variable";
-        return "Unknown";
+        return "expression";
     }
     static ParamIns requireReturn(String str, int area_id, int layout_id){
         switch (getTypeOf(str)){
             case "variable":
                 Variable var= getVariableByName(str, area_id, layout_id);
                 return new ParamIns(var.type,var.value);
+            case "function":
+                return runFunction(str,area_id,layout_id);
             case "equality":
                 return getEqualityResult(str,area_id,layout_id);
             case "inequality":
@@ -101,6 +106,13 @@ public class DClass {
         }
 
         return new ParamIns(getTypeOf(str),str);
+    }
+    public static String[] addBehind(String[] str,String insert){
+        String s="";
+        for(int i=1;i<str.length;i++)
+            s+=str[i]+insert;
+        //System.out.println("\\"+s);
+        return new String[]{str[0].trim(),s.substring(0,s.length()-1).trim()};
     }
     static void createClass(String name){
         cls.add(new Class(name));
