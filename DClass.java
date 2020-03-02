@@ -84,7 +84,7 @@ public class DClass {
             return "Boolean";
         if(str.matches("^\\w+\\.\\w+\\(.*\\)$"))
             return "function";
-        if(str.matches("(.+&&.+|.+\\|\\|.+)"))
+        if(isBoolExpressionResult(str)!=null)
             return "bool_expression";
         if((index=isEquality(str))!=-1)
             return "equality";
@@ -95,6 +95,7 @@ public class DClass {
         return "expression";
     }
     static ParamIns requireReturn(String str, int area_id, int layout_id){
+        str=cleanBracket(str);
         switch (getTypeOf(str)){
             case "variable":
                 Variable var= getVariableByName(str, area_id, layout_id);

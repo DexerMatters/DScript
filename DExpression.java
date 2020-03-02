@@ -1,4 +1,6 @@
 package com.dexer.dscript;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static com.dexer.dscript.DFunction.*;
@@ -108,14 +110,75 @@ public class DExpression {
 
        return null;
     }
+    public static Integer[] isBoolExpressionResult(String str){
+        ArrayList<Integer> ar=new ArrayList<>();
+        for(int i=1;i<str.length();i++){
+            String temp=str.charAt(i-1)+""+str.charAt(i);
+
+            if((temp.equals("&&")||temp.equals("||")||temp.equals("##")) &&
+                    !hasCovered(str,i,BRACLET_STRING)&&
+                    !hasCovered(str,i,BRACKET_NORMAL)&&
+                    !hasCovered(str,i-1,BRACLET_STRING)&&
+                    !hasCovered(str,i-1,BRACKET_NORMAL)) {
+                ar.add(i);
+            }
+        }
+        if(ar.size()!=0)
+            return ar.toArray(new Integer[0]);
+        else return null;
+    }
     public static ParamIns getBoolExpressionResult(String str,int area_id,int layout_id){
+        Integer[] ar;
+        if((ar=isBoolExpressionResult(str))!=null) {
+            String[] strs = new String[ar.length + 1];
+            String[] syms = new String[ar.length];
+            if(ar.length>=2) {
+                int index = 0;
+                for (int i : ar) {
+                    index++;
+                    String sym = str.charAt(i - 1) + "" + str.charAt(i);
+                    syms[index-1] = sym;
+                    strs[index] = str.substring(ar[index - 1] + 1, ar[index] - 1);
+                    if (index == ar.length - 1) break;
+                }
+            }
+            int last=ar[ar.length-1];
+            syms[syms.length-1]=str.charAt(last-1) + "" + str.charAt(last);
+            strs[0]=str.substring(0,ar[0]-1);
+            strs[strs.length-1]=str.substring(last+1);
+            //Second
+            ParamIns[] pis=new ParamIns[strs.length];
+            for (int i = 0; i < pis.length; i++)
+                pis[i]=requireReturn(strs[i],area_id,layout_id);
+            int ptr=0;
+            while(ptr<syms.length){
+                if(syms[ptr].equals("&&"))
+                    pis[0]=bool_and(pis[0],pis[ptr+1]);
+                if(syms[ptr].equals("||"))
+                    pis[0]=bool_or(pis[0],pis[ptr+1]);
+                if(syms[ptr].equals("##"))
+                    pis[0]=bool_xor(pis[0],pis[ptr+1]);
+                ptr++;
+            }
+
+            return pis[0];
+        }
         return null;
     }
     public static String cleanBracket(String str){
+        str=str.trim();
         if((str.charAt(0) + "" + str.charAt(str.length() - 1)).equals("()"))
             return str.substring(1,str.length()-1);
         else
             return str;
     }
-
+    private static ParamIns bool_and(ParamIns A,ParamIns B){
+        return new ParamIns("Boolean",Boolean.toString(Boolean.parseBoolean(A.value)&&Boolean.parseBoolean(B.value)));
+    }
+    private static ParamIns bool_or(ParamIns A,ParamIns B){
+        return new ParamIns("Boolean",Boolean.toString(Boolean.parseBoolean(A.value)||Boolean.parseBoolean(B.value)));
+    }
+    private static ParamIns bool_xor(ParamIns A,ParamIns B){
+        return new ParamIns("Boolean",Boolean.toString(Boolean.logicalXor(Boolean.parseBoolean(A.value),Boolean.parseBoolean(B.value))));
+    }
 }

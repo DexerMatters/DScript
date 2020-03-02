@@ -20,8 +20,8 @@ public class Main {
                 "" +
                         "var a=\"232\";\n" +
                         "var b=(Integer) a;\n" +
-                        "System.output(b++);" +
-                        "System.output((String) b);\n" +
+                        "var c=1245;\n" +
+                        "System.output(b==c##c>=b);\n" +
                         "";
         DComplier dc=new DComplier(new DCode(str)){
             @Override
@@ -47,7 +47,6 @@ public class Main {
                         }));
             }
         };
-
         dc.compileWithoutPretreatment();
         //System.out.println(DExpression.isEquation("a==f"));
     }
