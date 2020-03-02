@@ -1,6 +1,8 @@
 package com.dexer.dscript;
 
 
+import java.io.File;
+
 import static com.dexer.dscript.DClass.*;
 import static com.dexer.dscript.DFunction.*;
 
@@ -15,15 +17,7 @@ public class Main {
 //            System.out.println(n.getContent()+"     "+n.getCondition());
 //        }
 
-        String str=
-
-                "" +
-                        "var a=\"232\";\n" +
-                        "var b=(Integer) a;\n" +
-                        "var c=1245;\n" +
-                        "System.output(b==c##c>=b);\n" +
-                        "";
-        DComplier dc=new DComplier(new DCode(str)){
+        DComplier dc=new DComplier(new File("E:\\java project\\DScript\\dscripts\\demo.ds")){
             @Override
             public void preLoad() {
                 createClass("System");

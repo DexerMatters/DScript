@@ -1,5 +1,6 @@
 package com.dexer.dscript;
 
+import java.io.*;
 import java.util.ArrayList;
 import static com.dexer.dscript.DClass.*;
 import static com.dexer.dscript.DFunction.*;
@@ -12,6 +13,18 @@ public class DComplier{
     public DComplier(DCode code){
         comp=this;
         this.code=code;
+    }
+    public DComplier(File file){
+        StringBuffer sb=new StringBuffer();
+        try {
+            BufferedReader fis=new BufferedReader(new FileReader(file));
+            String line;
+            while((line=fis.readLine())!=null)
+                sb.append(line);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        code=new DCode(sb.toString());
     }
     public static <T> void debug(ArrayList<T> array){
         for(T a:array) {
