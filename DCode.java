@@ -37,7 +37,7 @@ public class DCode {
                         scan = 1;
                         break;
                     }
-                    if(code_[j+1].equals(";")||j+1==code_.length-1){
+                    if(code_[j+1].equals(";")||j+1==code_.length-1&&scan!=0){
                         scan=0;
                         break;
                     }

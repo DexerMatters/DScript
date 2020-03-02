@@ -41,7 +41,7 @@ public class Main {
                         }));
             }
         };
-        dc.compileWithoutPretreatment();
+        dc.compileWithoutPretreatment(0,0);
         //System.out.println(DExpression.isEquation("a==f"));
     }
 

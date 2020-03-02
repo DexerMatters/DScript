@@ -6,12 +6,14 @@ import static com.dexer.dscript.DClass.*;
 import static com.dexer.dscript.DFunction.*;
 import static com.dexer.dscript.DReference.*;
 import static com.dexer.dscript.DVariable.*;
+import static com.dexer.dscript.DRuntime.*;
 public class DComplier{
     private DNode main_node=new DNode();
     private int times=0;
-    DCode code;
+    public static DCode code;
+    public static int AREA_ID=0,LAYOUT_ID=0;
     public DComplier(DCode code){
-        comp=this;
+        DRuntime.comp=this;
         this.code=code;
     }
     public DComplier(File file){
@@ -44,18 +46,19 @@ public class DComplier{
         }
     }
     public void preLoad(){}
-    public void compileWithoutPretreatment(){
+    public void compileWithoutPretreatment(int area_id,int layout_id){
         String code_str=code.getCode();
         String line="";
         preLoad();
         //getClassByName("System").runFunction("output",new ParamIns[]{new ParamIns("String","hello")});
         for (int i = 0; i < code_str.length(); i++) {
-            if(code_str.charAt(i)==';'&&!hasCovered(code_str,i,BRACLET_STRING)){
+            if(code_str.charAt(i)==';'&&!hasCovered(code_str,i,BRACLET_STRING)&&!hasCovered(code_str,i,BRACLET_CURLY)){
                 line=line.trim();
-                importVariable(line,0,0);
-                assignVariable(line,0,0);
-                assignVariableAs(line,0,0);
-                runFunction(line,0,0);
+                importVariable(line,area_id,layout_id);
+                assignVariable(line,area_id,layout_id);
+                assignVariableAs(line,area_id,layout_id);
+                solveIf(code_str,line,i,area_id,layout_id);
+                runFunction(line,area_id,layout_id);
                 line="";
             }else
                 line+=code_str.charAt(i);

@@ -16,10 +16,13 @@ public class DReference{
     public static void reassignToVal(Variable leftV,String type,String value,int area_id,int layout_id){
         vars.get(indexOf(leftV)).value=requireReturn(value,area_id,layout_id).value;
     }
+    public static boolean isVaild(Variable v,int area_id,int layout_id,String name){
+        return v.area_id==area_id&&v.layout_id<=layout_id&&v.name.equals(name);
+    }
     public static String getTypeByName(String name,int area_id,int layout_id){
         String r=null;
         for(Variable v : vars){
-            if(v.area_id==area_id&&v.layout_id<=layout_id&&v.name.equals(name)){
+            if(isVaild(v,area_id,layout_id,name)){
                 r=v.type;
             }
         }
@@ -28,7 +31,7 @@ public class DReference{
     public static String getValueByName(String name,int area_id,int layout_id){
         String r=null;
         for(Variable v : vars){
-            if(v.area_id==area_id&&v.layout_id<=layout_id&&v.name.equals(name)){
+            if(isVaild(v,area_id,layout_id,name)){
                 r=v.type;
             }
         }
@@ -37,7 +40,7 @@ public class DReference{
     public static Variable getVariableByName(String name,int area_id,int layout_id){
         Variable r=null;
         for(Variable v : vars){
-            if(v.area_id==area_id&&v.layout_id<=layout_id&&v.name.equals(name)){
+            if(isVaild(v,area_id,layout_id,name)){
                 r=v;
             }
         }
@@ -47,7 +50,7 @@ public class DReference{
         
         //System.out.println(code);
         int left=0,right=0;
-        for (int i = pos; i < str.length(); i++) {
+        for (int i = pos+1; i < str.length(); i++) {
             if(!Arrays.equals(bracket, BRACLET_STRING)) {
                 if (str.charAt(i) == bracket[1])
                     right++;
@@ -56,7 +59,7 @@ public class DReference{
             }else if(str.charAt(i) == bracket[0])
                 right++;
         }
-        for (int i = pos; i >= 0; i--) {
+        for (int i = pos-1; i >= 0; i--) {
             if(!Arrays.equals(bracket, BRACLET_STRING)) {
                 if (str.charAt(i) == bracket[0])
                     left++;
@@ -75,7 +78,7 @@ public class DReference{
         int ptr=-1;
         for(Variable v : vars){
             ptr++;
-            if(v.layout_id<=var.layout_id&&v.area_id==var.area_id&& v.name.equals(var.name))
+            if(isVaild(v,var.area_id,var.layout_id,var.name))
                 return ptr;
         }
         return ptr;
