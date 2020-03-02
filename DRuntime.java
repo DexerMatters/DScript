@@ -11,7 +11,7 @@ public class DRuntime {
             int mode=0;
             int i;
             for(i=index-2;i>=0;i--){
-                if(code.charAt(i)=='{'&&!hasCovered(code,i,BRACLET_CURLY)&&hasCovered(code,i,BRACLET_STRING)){
+                if(code.charAt(i)=='{'&&!hasCovered(code,i,BRACLET_CURLY)&&!hasCovered(code,i,BRACLET_STRING)){
                     if(code.substring(i - 4, i).equals("else")){
                         mode=1;
                     }else

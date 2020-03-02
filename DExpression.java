@@ -10,19 +10,24 @@ import static com.dexer.dscript.DVariable.*;
 public class DExpression {
 
     public static int isEquality(String str){
+        int r=-1;
         for(int i=1;i<str.length();i++){
             if(     !hasCovered(str,i,BRACLET_STRING)&&
                     !hasCovered(str,i,BRACKET_NORMAL)&&
                     !hasCovered(str,i-1,BRACLET_STRING)&&
                     !hasCovered(str,i-1,BRACKET_NORMAL)&&
                     str.charAt(i)=='='&&
-                    str.charAt(i-1)=='='){
-                return i-1;
-            }
+                    str.charAt(i-1)=='=')
+                r=i-1;
+            if(     !hasCovered(str,i,BRACLET_STRING)&&
+                    !hasCovered(str,i,BRACKET_NORMAL)&&
+                    str.charAt(i)=='?')
+                r=-1;
         }
-        return -1;
+        return r;
     }
     public static int isInequality(String str){
+        int r=-1;
         for(int i=1;i<str.length();i++){
             if(     !hasCovered(str,i,BRACLET_STRING)&&
                     !hasCovered(str,i,BRACKET_NORMAL)&&
@@ -33,15 +38,18 @@ public class DExpression {
                     str.charAt(i-1)=='>'||
                     str.charAt(i-1)=='!'
                     ))
-                return i-1;
+                r=i-1;
             if(     !hasCovered(str,i,BRACKET_NORMAL)&&
                     !hasCovered(str,i,BRACLET_STRING)&&
                     (str.charAt(i)=='<'||
-                    str.charAt(i)=='>')){
-                return i;
-            }
+                    str.charAt(i)=='>'))
+                r=i;
+            if(     !hasCovered(str,i,BRACLET_STRING)&&
+                    !hasCovered(str,i,BRACKET_NORMAL)&&
+                    str.charAt(i)=='?')
+                r=-1;
         }
-        return -1;
+        return r;
     }
     public static ParamIns getEqualityResult(String str,int area_id,int layout_id){
         int index=isEquality(str);
@@ -106,6 +114,37 @@ public class DExpression {
                return new ParamIns(type_casted,val.substring(1,val.length()-1));
            else
                return new ParamIns(type_casted,"\""+val+"\"");
+       }
+       if(str.matches("^.+\\?.+(:.+)?$")){
+            int mode=0;
+            String condition="",
+                    iftrue="",
+                    iffalse="";
+            for(int i=0;i<str.length();i++){
+                if(mode==0)
+                    condition+=str.charAt(i);
+                if(mode==1)
+                    iftrue+=str.charAt(i);
+                if(mode==2)
+                    iffalse+=str.charAt(i);
+                if(str.charAt(i)=='?'&&!hasCovered(str,i,BRACLET_STRING))
+                    mode=1;
+                if(str.charAt(i)==':'&&!hasCovered(str,i,BRACLET_STRING))
+                    mode=2;
+            }
+            condition=condition.substring(0,condition.length()-1);
+            if(mode==2) iftrue=iftrue.substring(0,iftrue.length()-1);
+            boolean re=Boolean.parseBoolean(requireReturn(condition,area_id,layout_id).value);
+            if(re) return requireReturn(iftrue,area_id,layout_id);
+            if(!re){
+                if(mode==2) return requireReturn(iffalse,area_id,layout_id);
+                if(mode==1)
+                    if(isEquality(condition)!=-1) {
+                        return requireReturn(condition.substring(0, isEquality(condition)), area_id, layout_id);
+                    }
+                    if(isInequality(condition)!=-1)
+                        return requireReturn(condition.substring(0,isInequality(condition)),area_id,layout_id);
+            }
        }
 
        return null;
