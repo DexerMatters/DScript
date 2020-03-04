@@ -7,8 +7,7 @@ A new script language based on Java
 var a=12;
 ```
 The translation engine will recognize the type of the value automatically.This is just like JavaScript,which can help you simplify your assignment.
-
-### Conditional branching
+### Conditional branching with 'unless'
 ``` javascript
 var a=12;
 var b=23;
@@ -25,7 +24,7 @@ unless(a<b){
 ```
 Added a new keyword ``unless(...)`` for ``if(!...)``
 
-### Better ternary operator
+### Better ternary operator without ':'
 ``` javascript
 var a=25;
 var b=13;
