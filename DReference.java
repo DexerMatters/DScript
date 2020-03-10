@@ -49,31 +49,47 @@ public class DReference{
     public static boolean hasCovered(String str,int pos,char[] bracket){
         
         //System.out.println(code);
-        int left=0,right=0;
-        for (int i = pos+1; i < str.length(); i++) {
-            if(!Arrays.equals(bracket, BRACLET_STRING)) {
-                if (str.charAt(i) == bracket[1])
+            int left = 0, right = 0;
+            for (int i = pos; i < str.length(); i++) {
+                if (!Arrays.equals(bracket, BRACLET_STRING)) {
+                    if (str.charAt(i) == bracket[1])
+                        right++;
+                    if (str.charAt(i) == bracket[0])
+                        right--;
+                } else if (str.charAt(i) == bracket[0])
                     right++;
-                if (str.charAt(i) == bracket[0])
-                    right--;
-            }else if(str.charAt(i) == bracket[0])
-                right++;
-        }
-        for (int i = pos-1; i >= 0; i--) {
-            if(!Arrays.equals(bracket, BRACLET_STRING)) {
-                if (str.charAt(i) == bracket[0])
+            }
+            for (int i = pos; i >= 0; i--) {
+                if (!Arrays.equals(bracket, BRACLET_STRING)) {
+                    if (str.charAt(i) == bracket[0])
+                        left++;
+                    if (str.charAt(i) == bracket[1])
+                        left--;
+                } else if (str.charAt(i) == bracket[0])
                     left++;
-                if (str.charAt(i) == bracket[1])
-                    left--;
-            }else if(str.charAt(i) == bracket[0])
-                left++;
-        }
-
-        if(!Arrays.equals(bracket, BRACLET_STRING)) {
-            return right == left && right + left != 0;
-        } else return left%2!=0||right%2!=0;
+            }
+            if (!Arrays.equals(bracket, BRACLET_STRING)) {
+                return right == left && right + left != 0;
+            } else return left % 2 != 0 || right % 2 != 0;
     }
+    public static int getIndexCovered(String str,int pos,char[] bracket){
 
+        //System.out.println(code);
+        int left = 0, right = 0;
+        for (int i = pos + 1; i < str.length(); i++) {
+            if (str.charAt(i) == bracket[1])
+                right++;
+            if (str.charAt(i) == bracket[0])
+                right--;
+        }
+        for (int i = pos - 1; i >= 0; i--) {
+            if (str.charAt(i) == bracket[0])
+                left++;
+            if (str.charAt(i) == bracket[1])
+                left--;
+        }
+        return Math.abs(left*right);
+    }
     public static int indexOf(Variable var){
         int ptr=-1;
         for(Variable v : vars){
@@ -82,6 +98,9 @@ public class DReference{
                 return ptr;
         }
         return ptr;
+    }
+    public static boolean isTrue(DFunction.ParamIns bool){
+        return bool.value.equals("true");
     }
 
 }

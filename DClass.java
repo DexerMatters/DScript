@@ -1,12 +1,15 @@
 package com.dexer.dscript;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.dexer.dscript.DReference.*;
 import static com.dexer.dscript.DVariable.*;
 import static com.dexer.dscript.DFunction.*;
 import static com.dexer.dscript.DExpression.*;
+import static com.dexer.dscript.DTools.*;
 public class DClass {
     private static ArrayList<Class> cls=new ArrayList<>();
 
@@ -25,10 +28,12 @@ public class DClass {
                 static_func.add(function);
         }
         public ParamIns runFunction(String name, DFunction.ParamIns[] paramIns){
-            for(DFunction func : static_func)
-                if(func.getName().equals(name)) {
+            for(DFunction func : static_func) {
+                if (func.getName().equals(name)) {
+
                     return func.run(paramIns);
                 }
+            }
             return null;
         }
 
@@ -39,33 +44,13 @@ public class DClass {
             String[] strs=str.split("\\.");
             strs=addBehind(strs,".");
             int mode=0;
-            String params="",name="",param="";
+            String params="";
             ArrayList<ParamIns> pis=new ArrayList<>();
-            for(int i=0;i<strs[1].length();i++){
-                if(i==strs[1].length()-1) break;
-                if(mode==1)
-                    params+=strs[1].charAt(i);
-                if(strs[1].charAt(i)=='('&&mode!=1)
-                    mode = 1;
-                if(mode==0)
-                    name+=strs[1].charAt(i);
-            }
-            for (int i = 0; i < params.length(); i++) {
-                if(params.charAt(i)==','&&!hasCovered(params,i,BRACLET_STRING)&&!hasCovered(params,i,BRACKET_NORMAL)){
-                    pis.add(requireReturn(param,area_id,layout_id));
-                    param="";
-                }else {
-                    //System.out.println(param);
-                    param += params.charAt(i);
-                }
-                if(i==params.length()-1) {
-                    pis.add(requireReturn(param, area_id, layout_id));
-
-                }
-            }
-            //DComplier.debug(pis);
-            ParamIns[] array = pis.toArray(new ParamIns[pis.size()]);
-            return getClassByName("System").runFunction(name,array);
+            params=getContentInBracket(str,BRACKET_NORMAL);
+            for(String s : split(params,","))
+                pis.add(requireReturn(s.trim(),area_id,layout_id));
+            ParamIns[] array=pis.toArray(new ParamIns[0]);
+            return getClassByName("System").runFunction(strs[1].substring(0,indexOf(strs[1],'(')),array);
 
             //System.out.println(strs[1]+"|"+name+"|"+params);
         }

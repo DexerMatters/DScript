@@ -2,6 +2,7 @@ package com.dexer.dscript;
 
 
 import java.io.File;
+import java.util.Arrays;
 
 import static com.dexer.dscript.DClass.*;
 import static com.dexer.dscript.DFunction.*;
@@ -17,7 +18,7 @@ public class Main {
 //            System.out.println(n.getContent()+"     "+n.getCondition());
 //        }
 
-        DComplier dc=new DComplier(new File("E:\\java project\\DScript\\dscripts\\demo.ds")){
+        DComplier dc=new DComplier(new File("D:\\java project\\DScript\\dscripts\\demo.ds")){
             @Override
             public void preLoad() {
                 createClass("System");
@@ -42,7 +43,6 @@ public class Main {
             }
         };
         dc.compileWithoutPretreatment(0,0);
-        //System.out.println(DExpression.isEquation("a==f"));
     }
 
 }
