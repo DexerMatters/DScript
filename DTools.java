@@ -1,5 +1,6 @@
 package com.dexer.dscript;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import static com.dexer.dscript.DReference.*;
@@ -52,6 +53,26 @@ public class DTools {
                 res+=strs[i];
         }
         return res.substring(1);
+
+    }
+    static String[] getContentInBracket_(String str,char[] c){
+        String[] strs=str.split("");
+        ArrayList<String> ress=new ArrayList<>();
+        String res="";
+        int mode=0;
+        for(int i=0;i<strs.length;i++){
+
+            if(strs[i].charAt(0)==c[0]&&getIndexCovered(str,i,c)==0&&mode==0)
+                mode=1;
+            if(strs[i].charAt(0)==c[1]&&getIndexCovered(str,i,c)==0&&mode==1) {
+                ress.add(res.substring(1));
+                mode=0;
+                res="";
+            }
+            if(mode==1)
+                res+=strs[i];
+        }
+        return ress.toArray(new String[0]);
 
     }
 }

@@ -43,6 +43,7 @@ public class Main {
             }
         };
         dc.compileWithoutPretreatment(0,0);
+        //System.out.println(Arrays.toString(DTools.getContentInBracket_("if{afaf}else{afgsgh}",DReference.BRACLET_CURLY)));
     }
 
 }

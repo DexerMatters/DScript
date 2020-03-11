@@ -14,7 +14,7 @@ public class DVariable{
     }
 
     static ArrayList<Variable> vars=new ArrayList<>();
-    static void importVariable(String var_str, int area_id,int layout_id){
+    static Variable importVariable(String var_str, int area_id,int layout_id){
         Variable var=new Variable();
         var.area_id=area_id;
         var.layout_id=layout_id;
@@ -31,6 +31,7 @@ public class DVariable{
                 }
             }
         }
+        return var;
     }
     static void assignVariable(String str, int area_id,int layout_id) {
         if (str.matches("^[\\W\\w_\\d]+\\s*=\\s*.+$")) {
@@ -69,6 +70,9 @@ public class DVariable{
             else new DError(comp,"type");
         }
         return null;
+    }
+    static void removeVariable(Variable v){
+        vars.remove(v);
     }
     static Variable createVariable(String type,String name,String value,int area_id,int layout_id){
         Variable v=new Variable();

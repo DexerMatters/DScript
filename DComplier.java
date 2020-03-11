@@ -54,15 +54,15 @@ public class DComplier{
         for (int i = 0; i < code_str.length(); i++) {
 
             if(code_str.charAt(i)==';'){
-                if(!(hasCovered(code_str,i,BRACLET_STRING)||hasCovered(code_str,i,BRACLET_CURLY))) {
+                if(!(hasCovered(code_str,i,BRACLET_STRING)||hasCovered(code_str,i,BRACLET_CURLY)||hasCovered(code_str,i,BRACKET_NORMAL))) {
                     line = line.trim();
                     importVariable(line, area_id, layout_id);
                     assignVariable(line, area_id, layout_id);
                     assignVariableAs(line, area_id, layout_id);
-                    solveIf(code_str, line, i, area_id, layout_id);
+                    solveKeyword(code_str, line, i, area_id, layout_id);
                     runFunction(line, area_id, layout_id);
                     line = "";
-                }
+                }else line+=code_str.charAt(i);
             }else
                 line+=code_str.charAt(i);
 
