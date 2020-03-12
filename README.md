@@ -2,9 +2,10 @@
 A new script language based on Java
 
 ## Features
-### Assign a variable
+### Assign a variable or const
 ``` javascript
-var a=12;
+var a=12; //var
+con b=23; //const
 ```
 The translation engine will recognize the type of the value automatically.This is just like JavaScript,which can help you simplify your assignment.
 ### Conditional branching with 'unless'
@@ -44,4 +45,13 @@ System.output(12<5##3==6); //false
 ```
 Added '##' as XOR that compares the two boolean values beside it,returns true if they are differnt and returns false if not.
 
+### Easy asynchronizing
+``` javascript
+async("thread1"){
+  for(var i=0~100){
+    System.output(i);
+  };
+};
+```
+Added 'async' to create a thread named what the parameter is.
 ### More features are coming soon!
