@@ -8,6 +8,15 @@ import static com.dexer.dscript.DReference.*;
 import static com.dexer.dscript.DVariable.*;
 import static com.dexer.dscript.DRuntime.*;
 public class DComplier{
+    public static final String VERSION="0.0.1 dev";
+    public static final String INFO =
+            "//////////////////\n" +
+                    "   DScript "+VERSION+"\n" +
+                    "   Copyright c Dexer Matters\n" +
+                    "   Feedback:  https://github.com/DexerMatters/DScript/issues\n" +
+                    "   Github:    https://github.com/DexerMatters/DScript\n" +
+                    "   Contract:  2353708378@qq.com or DexerMatters@gmail.com"+
+            "\n//////////////////";
     private DNode main_node=new DNode();
     private int times=0;
     public static DCode code;
@@ -45,8 +54,20 @@ public class DComplier{
             }
         }
     }
-    public void preLoad(){}
-    public void compileWithoutPretreatment(int area_id,int layout_id){
+    public void preLoad(){
+        createClass("System");
+        getClassByName("System").addFunction(new DFunction("output",
+                new Param[]{new Param("Object","str")}, STATIC|NATIVE,PUBLIC,
+                new NativeCode(){
+                    @Override
+                    public ParamIns run(ParamIns[] pi) {
+                        System.out.println(pi[0].value);
+                        return new ParamIns("Void",null);
+                    }
+                }));
+        getClassByName("System").addAttribute(new DAttribute("VERSION",new ParamIns("String",VERSION),STATIC|NATIVE,PUBLIC));
+    }
+    public void compile(int area_id,int layout_id){
         String code_str=code.getCode();
         String line="";
         preLoad();

@@ -104,6 +104,8 @@ public class DClass {
     static ParamIns requireReturn(String str, int area_id, int layout_id){
         str=cleanBracket(str);
         switch (getTypeOf(str)){
+            case "String":
+                return new ParamIns(getTypeOf(str),str.substring(1,str.length()-1));
             case "variable":
                 Variable var= getVariableByName(str, area_id, layout_id);
                 return new ParamIns(var.type,var.value);
