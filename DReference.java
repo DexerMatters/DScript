@@ -11,10 +11,12 @@ public class DReference{
             BRACLET_CURLY={'{','}'};
     public static DComplier comp;
     public static void reassignToVar(Variable leftV, Variable rightV){
-        vars.get(indexOf(leftV)).value=rightV.value;
+        if(leftV.type.charAt(leftV.type.length()-1)!='$')
+            vars.get(indexOf(leftV)).value=rightV.value;
     }
     public static void reassignToVal(Variable leftV,String type,String value,int area_id,int layout_id){
-        vars.get(indexOf(leftV)).value=requireReturn(value,area_id,layout_id).value;
+        if(leftV.type.charAt(leftV.type.length()-1)!='$')
+            vars.get(indexOf(leftV)).value=requireReturn(value,area_id,layout_id).value;
     }
     public static boolean isVaild(Variable v,int area_id,int layout_id,String name){
         return v.area_id==area_id&&v.layout_id<=layout_id&&v.name.equals(name);

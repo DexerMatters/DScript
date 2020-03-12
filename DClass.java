@@ -18,6 +18,8 @@ public class DClass {
         private String name;
         private ArrayList<DFunction> static_func=new ArrayList<>(),
                                     dymastic_func=new ArrayList<>();
+        private ArrayList<DAttribute> static_attr=new ArrayList<>(),
+                                    dymastic_attr=new ArrayList<>();
         private Class(String name){
             this.name=name;
         }
@@ -27,11 +29,24 @@ public class DClass {
             else
                 static_func.add(function);
         }
-        public ParamIns runFunction(String name, DFunction.ParamIns[] paramIns){
+        public void addAttribute(DAttribute attribute){
+            if(attribute.getState()==DAttribute.DYMASTIC||attribute.getState()==(DAttribute.DYMASTIC|DAttribute.NATIVE))
+                dymastic_attr.add(attribute);
+            else
+                static_attr.add(attribute);
+        }
+        public ParamIns runFunction(String name, DFunction.ParamIns[] paramIns,int vis){
             for(DFunction func : static_func) {
                 if (func.getName().equals(name)) {
-
-                    return func.run(paramIns);
+                    return func.run(paramIns,vis);
+                }
+            }
+            return null;
+        }
+        public ParamIns getAttribute(String name){
+            for(DAttribute attr : static_attr) {
+                if (attr.getName().equals(name)) {
+                    return attr.getVal();
                 }
             }
             return null;
@@ -50,11 +65,16 @@ public class DClass {
             for(String s : split(params,","))
                 pis.add(requireReturn(s.trim(),area_id,layout_id));
             ParamIns[] array=pis.toArray(new ParamIns[0]);
-            return getClassByName("System").runFunction(strs[1].substring(0,indexOf(strs[1],'(')),array);
+            return getClassByName("System").runFunction(strs[1].substring(0,indexOf(strs[1],'(')),array,PUBLIC);
 
             //System.out.println(strs[1]+"|"+name+"|"+params);
         }
         return null;
+    }
+    static ParamIns getAttribute(String str){
+        String[] temp=split(str,".");
+        return getClassByName(temp[0]).getAttribute(temp[1]);
+
     }
     static int index=0;
     static String getTypeOf(String str){
@@ -75,6 +95,8 @@ public class DClass {
             return "equality";
         if((index=isInequality(str))!=-1)
             return "inequality";
+        if(str.matches("^[a-zA-Z_]+\\.[a-zA-Z_]+$"))
+            return "attribute";
         if(str.matches("^[a-zA-Z_]+$"))
             return "variable";
         return "expression";
@@ -93,6 +115,8 @@ public class DClass {
                 return getEqualityResult(str,area_id,layout_id);
             case "inequality":
                 return getInequalityResult(str,area_id,layout_id);
+            case "attribute":
+                return getAttribute(str);
             case "expression":
                 return getExpressionResult(str, area_id, layout_id);
         }

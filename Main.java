@@ -8,7 +8,6 @@ import static com.dexer.dscript.DClass.*;
 import static com.dexer.dscript.DFunction.*;
 
 public class Main {
-
     public static void main(String[] args) {
 	// write your code here
 //        DCode code=new DCode("I like;my{lampese}dddadf;dsgs;ever{forever}dddd;faf;for(){sss}");
@@ -23,7 +22,7 @@ public class Main {
             public void preLoad() {
                 createClass("System");
                 getClassByName("System").addFunction(new DFunction("output",
-                        new Param[]{new Param("Object","str")}, STATIC|NATIVE,
+                        new Param[]{new Param("Object","str")}, STATIC|NATIVE,PUBLIC,
                         new NativeCode(){
                             @Override
                             public ParamIns run(ParamIns[] pi) {
@@ -32,7 +31,7 @@ public class Main {
                             }
                         }));
                 getClassByName("System").addFunction(new DFunction("add",
-                        new Param[]{new Param("Integer","int"),new Param("Integer","int2")}, STATIC|NATIVE,
+                        new Param[]{new Param("Integer","int"),new Param("Integer","int2")}, STATIC|NATIVE,PUBLIC,
                         new NativeCode(){
                             @Override
                             public ParamIns run(ParamIns[] pi) {
@@ -40,6 +39,7 @@ public class Main {
                                 return new ParamIns("Integer",Integer.toString(r));
                             }
                         }));
+                getClassByName("System").addAttribute(new DAttribute("VERSION",new ParamIns("String","0.0.1"),STATIC|NATIVE,PUBLIC));
             }
         };
         dc.compileWithoutPretreatment(0,0);

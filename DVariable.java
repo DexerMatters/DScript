@@ -18,7 +18,7 @@ public class DVariable{
         Variable var=new Variable();
         var.area_id=area_id;
         var.layout_id=layout_id;
-        if(var_str.matches("^var\\s+[\\W\\w_\\d]+\\s*=\\s*.+$")) {
+        if(var_str.matches("^(var|con)\\s+[\\W\\w_\\d]+\\s*=\\s*.+$")) {
             String[] strs = addBehind(var_str.split("="),"=");
 
             if (strs.length == 2) {
@@ -27,6 +27,11 @@ public class DVariable{
                 if (s.length == 2 && s[0].equals("var")) {
                     var.type = DClass.getTypeOf(requireReturn(strs[1], area_id, layout_id).value);
                     var.name = s[1];
+                    vars.add(var);
+                }
+                if(s.length==2&&s[0].equals("con")){
+                    var.type=DClass.getTypeOf(requireReturn(strs[1], area_id, layout_id).value)+"$";
+                    var.name=s[1];
                     vars.add(var);
                 }
             }

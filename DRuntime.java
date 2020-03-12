@@ -36,11 +36,18 @@ public class DRuntime {
                 System.out.println(Arrays.toString(conds));
                 int from = Integer.parseInt(v.value);
                 int to = Integer.parseInt(requireReturn(conds[1],area_id,layout_id).value);
-
-                for (int i = from; i <= to; i++) {
-                    reassignToVal(v, v.type, Integer.toString(i), area_id, layout_id);
-                    DCode runs = new DCode(code_strs);
-                    new DComplier(runs).compileWithoutPretreatment(0, 0);
+                if(from<to) {
+                    for (int i = from; i <= to; i++) {
+                        reassignToVal(v, v.type, Integer.toString(i), area_id, layout_id);
+                        DCode runs = new DCode(code_strs);
+                        new DComplier(runs).compileWithoutPretreatment(0, 0);
+                    }
+                }else{
+                    for (int i = from; i >= to; i--) {
+                        reassignToVal(v, v.type, Integer.toString(i), area_id, layout_id);
+                        DCode runs = new DCode(code_strs);
+                        new DComplier(runs).compileWithoutPretreatment(0, 0);
+                    }
                 }
                 removeVariable(v);
             }else{
@@ -56,6 +63,7 @@ public class DRuntime {
                     new DComplier(runs_).compileWithoutPretreatment(0, 0);
                     cond=requireReturn(conds[1],area_id,layout_id);
                 }
+                removeVariable(v);
             }
         }
     }
