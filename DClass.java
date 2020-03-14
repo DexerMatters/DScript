@@ -66,8 +66,10 @@ public class DClass {
         }
         public ParamIns reassignAttribute(String name,String value){
             for (int i = 0; i < static_attr.size(); i++) {
-                if(static_attr.get(i).getName().equals(name))
-                    static_attr.get(i).setVal(requireReturn(value,0,0));
+                String type=static_attr.get(i).getVal().type;
+                if(type.charAt(type.length()-1)!='$')
+                    if(static_attr.get(i).getName().equals(name))
+                        static_attr.get(i).setVal(requireReturn(value,0,0));
             }
             return null;
         }

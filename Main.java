@@ -12,6 +12,7 @@ import static com.dexer.dscript.DFunction.*;
 public class Main {
     public static void main(String[] args) {
         new DComplier(new File("D:\\java project\\DScript\\out\\artifacts\\dscript\\script.ds")).compile(0,0);
+//
         Scanner scan_mod = new Scanner(System.in);
         String[] params = scan_mod.nextLine().split(" ");
         if (params[0].equals("dsc")) {
