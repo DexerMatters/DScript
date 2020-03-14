@@ -28,6 +28,7 @@ public class DFunction {
         public ParamIns run(ParamIns[] pi){
             return null;
         };
+
     }
     private Param[] params;
     private int state;
@@ -53,13 +54,13 @@ public class DFunction {
 
     }
     public ParamIns run(ParamIns[] ins,int vis){
-        if(ins.length==params.length)
+        if (ins.length == params.length)
             for (int i = 0; i < ins.length; i++) {
-                if(!(ins[i].type.equals(params[i].type)||params[i].type.equals("Object"))) {
+                if (!(ins[i].type.equals(params[i].type) || params[i].type.equals("Object"))) {
                     return null;
                 }
             }
-        if(code_code!=null&&this.vis==vis)
+        if (code_code != null && this.vis == vis)
             return code_code.run(ins);
         return null;
     }

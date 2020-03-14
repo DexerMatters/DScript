@@ -18,20 +18,20 @@ public class DRuntime {
             String flag=line.substring(0,indexOf(line, '('));
             String[] code_strs=getContentInBracket_(code,BRACLET_CURLY);
             DCode runs = new DCode(code_strs[0]);
-            if (isTrue(condition) && flag.equals("if"))
+            if (flag.equals("if")&&isTrue(condition))
                 new DComplier(runs).compile(0, 0);
-            if (!isTrue(condition) && flag.equals("unless"))
+            if (flag.equals("unless")&&!isTrue(condition))
                 new DComplier(runs).compile(0, 0);
             if(code_strs.length==2){
                 DCode elses=new DCode(code_strs[1]);
-                if (!isTrue(condition) && flag.equals("if"))
+                if (flag.equals("if")&&!isTrue(condition))
                     new DComplier(elses).compile(0, 0);
-                if (isTrue(condition) && flag.equals("unless"))
+                if (flag.equals("unless")&&isTrue(condition))
                     new DComplier(elses).compile(0, 0);
 
             }
         }//for(Integer i=0 > 15)
-        if(line.matches("^for\\s*\\(.+\\)\\s*\\{.*}")){
+        if(line.matches("^for\\s*\\(.+\\)\\s*\\{.*}$")){
             String condition =line.substring(indexOf(line, '(') + 1, indexOf(line, ')'));
             String code_strs=getContentInBracket(code,BRACLET_CURLY);
             String[] conds=split(condition,"~");
@@ -69,7 +69,7 @@ public class DRuntime {
                 removeVariable(v);
             }
         }
-        if(line.matches("^async\\s*\\(.+\\)\\s*\\{.*}")){
+        if(line.matches("^async\\s*\\(.+\\)\\s*\\{.*}$")){
             String name =line.substring(indexOf(line, '(') + 1, indexOf(line, ')'));
             String code_strs=getContentInBracket(code,BRACLET_CURLY);
             thrs.put(name,new Thread(new Runnable() {
@@ -79,6 +79,10 @@ public class DRuntime {
                 }
             }));
             thrs.get(name).start();
+        }
+        if(line.matches("^rm\\s+[a-zA-Z_]+$")){
+            String name =line.split("\\s+")[1];
+            removeVariable(getVariableByName(name,area_id,layout_id));
         }
     }
 }

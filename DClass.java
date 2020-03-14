@@ -12,8 +12,7 @@ import static com.dexer.dscript.DExpression.*;
 import static com.dexer.dscript.DTools.*;
 public class DClass {
     private static ArrayList<Class> cls=new ArrayList<>();
-
-
+    private static ArrayList<DObject> objs=new ArrayList<>();
     public static class Class {
         private String name;
         private ArrayList<DFunction> static_func=new ArrayList<>(),
@@ -23,10 +22,18 @@ public class DClass {
         private Class(String name){
             this.name=name;
         }
+        public String newInstance(ParamIns[] pi,int vis){
+            DObject o=new DObject(name);
+            objs.add(o);
+            o.runConstructor(pi,vis);
+            return o.getId();
+        }
+
+
         public void addFunction(DFunction function){
-            if(function.getState()==DFunction.DYMASTIC||function.getState()==(DFunction.DYMASTIC|DFunction.NATIVE))
+            if(function.getState()==DFunction.DYMASTIC||function.getState()==(DFunction.DYMASTIC|DFunction.NATIVE)) {
                 dymastic_func.add(function);
-            else
+            }else
                 static_func.add(function);
         }
         public void addAttribute(DAttribute attribute){
@@ -35,11 +42,32 @@ public class DClass {
             else
                 static_attr.add(attribute);
         }
-        public ParamIns runFunction(String name, DFunction.ParamIns[] paramIns,int vis){
+        public ParamIns runStaticFunction(String name, DFunction.ParamIns[] paramIns,int vis){
             for(DFunction func : static_func) {
                 if (func.getName().equals(name)) {
                     return func.run(paramIns,vis);
                 }
+            }
+            return null;
+        }
+        public ParamIns runFunction(String name, DFunction.ParamIns[] paramIns,int vis){
+            for(DFunction func : dymastic_func) {
+                if (func.getName().equals(name)) {
+                    return func.run(paramIns,vis);
+                }
+            }
+            return null;
+        }
+        public DFunction[] getAllFunctions(){
+            return dymastic_func.toArray(new DFunction[0]);
+        }
+        public DAttribute[] getAllAttribute(){
+            return dymastic_attr.toArray(new DAttribute[0]);
+        }
+        public ParamIns reassignAttribute(String name,String value){
+            for (int i = 0; i < static_attr.size(); i++) {
+                if(static_attr.get(i).getName().equals(name))
+                    static_attr.get(i).setVal(requireReturn(value,0,0));
             }
             return null;
         }
@@ -53,28 +81,51 @@ public class DClass {
         }
 
     }
+
+    static ParamIns instanceClass(String str, int area_id, int layout_id){
+        str=str.trim();
+        String type=str.substring(indexOf(str,'w')+2,indexOf(str,'(')).trim();
+        String temp=getContentInBracket(str,BRACKET_NORMAL);
+        ArrayList<ParamIns> pis=new ArrayList<>();
+        if(!temp.equals("")) {
+            for (String s : split(temp, ","))
+                pis.add(requireReturn(s.trim(), area_id, layout_id));
+            return new ParamIns(type, getClassByName(type).newInstance(pis.toArray(new ParamIns[0]), PUBLIC));
+        }
+        else {
+            return new ParamIns(type, getClassByName(type).newInstance(new ParamIns[]{new ParamIns("Void", "")}, PUBLIC));
+        }
+    }
     static ParamIns runFunction(String str,int area_id,int layout_id){
 
-        if(str.matches("^\\w+\\.\\w+\\(.*\\)$")){
+        if(str.matches("^.+\\.\\w+\\(.*\\)$")){
             String[] strs=str.split("\\.");
             strs=addBehind(strs,".");
-            int mode=0;
             String params="";
             ArrayList<ParamIns> pis=new ArrayList<>();
             params=getContentInBracket(str,BRACKET_NORMAL);
             for(String s : split(params,","))
                 pis.add(requireReturn(s.trim(),area_id,layout_id));
             ParamIns[] array=pis.toArray(new ParamIns[0]);
-            return getClassByName("System").runFunction(strs[1].substring(0,indexOf(strs[1],'(')),array,PUBLIC);
-
+            Variable v=getVariableByName(strs[0], area_id, layout_id);
+            if(v==null)
+                return getClassByName(strs[0]).runStaticFunction(strs[1].substring(0,indexOf(strs[1],'(')),array,PUBLIC);
+            else{
+                return getObjectById(requireReturn(strs[0],area_id,layout_id).value).runFunction(strs[1].substring(0,indexOf(strs[1],'(')),array,PUBLIC);
+            }
             //System.out.println(strs[1]+"|"+name+"|"+params);
         }
         return null;
     }
-    static ParamIns getAttribute(String str){
+    static ParamIns getAttribute(String str,int area_id,int layout_id){
         String[] temp=split(str,".");
-        return getClassByName(temp[0]).getAttribute(temp[1]);
-
+        Variable v=getVariableByName(temp[0], area_id, layout_id);
+        if(v==null)
+            return getClassByName(temp[0]).getAttribute(temp[1]);
+        else {
+            //System.out.println(getObjectById(requireReturn(temp[0], area_id, layout_id).value).getAttribute(temp[1], PUBLIC));
+            return getObjectById(requireReturn(temp[0], area_id, layout_id).value).getAttribute(temp[1], PUBLIC);
+        }
     }
     static int index=0;
     static String getTypeOf(String str){
@@ -87,6 +138,11 @@ public class DClass {
             return "Float";
         if(str.matches("^(true|false)$"))
             return "Boolean";
+        if(str.matches("^\\[\\$.+\\$]$")) {
+            return "Object";
+        }
+        if(str.matches("^new\\s+[a-zA-Z_]+\\s*\\(.*\\)$"))
+            return "objectInstance";
         if(str.matches("^\\w+\\.\\w+\\(.*\\)$"))
             return "function";
         if(isBoolExpressionResult(str)!=null)
@@ -95,17 +151,25 @@ public class DClass {
             return "equality";
         if((index=isInequality(str))!=-1)
             return "inequality";
-        if(str.matches("^[a-zA-Z_]+\\.[a-zA-Z_]+$"))
+        if(str.matches("^[a-zA-Z_]+\\.[a-zA-Z_]+$")) {
             return "attribute";
+        }
         if(str.matches("^[a-zA-Z_]+$"))
             return "variable";
         return "expression";
     }
     static ParamIns requireReturn(String str, int area_id, int layout_id){
         str=cleanBracket(str);
+
         switch (getTypeOf(str)){
             case "String":
                 return new ParamIns(getTypeOf(str),str.substring(1,str.length()-1));
+            case "Object":
+
+                return new ParamIns(getObjectById(str).getType(),str.substring(1,str.length()-1));
+            case "objectInstance":
+                ParamIns pi=instanceClass(str,area_id,layout_id);
+                return pi;
             case "variable":
                 Variable var= getVariableByName(str, area_id, layout_id);
                 return new ParamIns(var.type,var.value);
@@ -118,7 +182,7 @@ public class DClass {
             case "inequality":
                 return getInequalityResult(str,area_id,layout_id);
             case "attribute":
-                return getAttribute(str);
+                return getAttribute(str,area_id,layout_id);
             case "expression":
                 return getExpressionResult(str, area_id, layout_id);
         }
@@ -139,6 +203,14 @@ public class DClass {
         for (int i = 0; i < cls.size(); i++) {
             if(name.equals(cls.get(i).name)){
                 return cls.get(i);
+            }
+        }
+        return null;
+    }
+    static DObject getObjectById(String id){
+        for (int i = 0; i < objs.size(); i++) {
+            if(id.equals(objs.get(i).getId())){
+                return objs.get(i);
             }
         }
         return null;

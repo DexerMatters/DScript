@@ -1,6 +1,8 @@
 package com.dexer.dscript;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import static com.dexer.dscript.DReference.*;
 import static com.dexer.dscript.DClass.*;
 import static com.dexer.dscript.DExpression.*;
@@ -22,10 +24,11 @@ public class DVariable{
             String[] strs = addBehind(var_str.split("="),"=");
 
             if (strs.length == 2) {
-                var.value = requireReturn(strs[1], area_id, layout_id).value;
+                DFunction.ParamIns pi=requireReturn(strs[1], area_id, layout_id);
+                var.value = pi.value;
                 String[] s = strs[0].split("\\s+");
                 if (s.length == 2 && s[0].equals("var")) {
-                    var.type = DClass.getTypeOf(requireReturn(strs[1], area_id, layout_id).value);
+                    var.type = DClass.getTypeOf(pi.value);
                     var.name = s[1];
                     vars.add(var);
                 }
@@ -39,15 +42,22 @@ public class DVariable{
         return var;
     }
     static void assignVariable(String str, int area_id,int layout_id) {
-        if (str.matches("^[\\W\\w_\\d]+\\s*=\\s*.+$")) {
-            String[] strs = addBehind(str.split("="),"=");
-
-            if (strs.length != 2 || !strs[0].matches("[\\w\\W]"))
-                return;
-            if (getVariableByName(strs[1], area_id, layout_id) != null)
-                reassignToVar(getVariableByName(strs[0], area_id, layout_id), getVariableByName(strs[1], area_id, layout_id));
-            else
-                reassignToVal(getVariableByName(strs[0], area_id, layout_id), DClass.getTypeOf(strs[1]), strs[1], area_id, layout_id);
+        if (str.matches("^[\\W\\w_\\d.]+\\s*=\\s*.+$")) {
+            String[] strs = addBehind(str.split("="), "=");
+            if(strs[0].contains("var")) return;
+            if (strs[0].indexOf('.') == -1) {
+                if (getVariableByName(strs[1], area_id, layout_id) != null)
+                    reassignToVar(getVariableByName(strs[0], area_id, layout_id), getVariableByName(strs[1], area_id, layout_id));
+                else
+                    reassignToVal(getVariableByName(strs[0], area_id, layout_id), DClass.getTypeOf(strs[1]), strs[1], area_id, layout_id);
+            }else{
+                String[] temp=strs[0].split("\\.");
+                Variable v=getVariableByName(temp[0],0,0);
+                if(v==null){
+                    getClassByName(temp[0]).reassignAttribute(temp[1],requireReturn(strs[1],area_id,layout_id).value);
+                }else
+                    getObjectById(requireReturn(temp[0],area_id,layout_id).value).reassignAttribute(temp[1],requireReturn(strs[1],area_id,layout_id).value,area_id,layout_id);
+            }
         }
     }
     static String assignVariableAs(String str,int area_id,int layout_id){

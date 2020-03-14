@@ -206,9 +206,12 @@ public class DExpression {
     }
     public static String cleanBracket(String str){
         str=str.trim();
-        if((str.charAt(0) + "" + str.charAt(str.length() - 1)).equals("()"))
-            return str.substring(1,str.length()-1);
-        else
+        if(str.length()>2) {
+            if ((str.charAt(0) + "" + str.charAt(str.length() - 1)).equals("()"))
+                return str.substring(1, str.length() - 1);
+            else
+                return str;
+        }else
             return str;
     }
     private static ParamIns bool_and(ParamIns A,ParamIns B){

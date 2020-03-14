@@ -56,6 +56,15 @@ public class DComplier{
     }
     public void preLoad(){
         createClass("System");
+        getClassByName("System").addFunction(new DFunction("constructor",
+                new Param[]{new Param("Void","Void")},DYMASTIC|NATIVE,PUBLIC,
+                new NativeCode(){
+                    @Override
+                    public ParamIns run(ParamIns[] pi) {
+                        System.out.println(1234);
+                        return new ParamIns("Void",null);
+                    }
+                }));
         getClassByName("System").addFunction(new DFunction("output",
                 new Param[]{new Param("Object","str")}, STATIC|NATIVE,PUBLIC,
                 new NativeCode(){
@@ -65,7 +74,17 @@ public class DComplier{
                         return new ParamIns("Void",null);
                     }
                 }));
+        getClassByName("System").addFunction(new DFunction("outputs",
+                new Param[]{new Param("String","str")},DYMASTIC|NATIVE,PUBLIC,
+                new NativeCode(){
+                    @Override
+                    public ParamIns run(ParamIns[] pi) {
+                        System.out.println(pi[0].value);
+                        return new ParamIns("Void","");
+                    }
+                }));
         getClassByName("System").addAttribute(new DAttribute("VERSION",new ParamIns("String",VERSION),STATIC|NATIVE,PUBLIC));
+        getClassByName("System").addAttribute(new DAttribute("version",new ParamIns("String",VERSION),DYMASTIC|NATIVE,PUBLIC));
     }
     public void compile(int area_id,int layout_id){
         String code_str=code.getCode();
