@@ -6,6 +6,7 @@ import java.util.Arrays;
 import static com.dexer.dscript.DReference.*;
 import static com.dexer.dscript.DClass.*;
 import static com.dexer.dscript.DExpression.*;
+import static com.dexer.dscript.DRes.*;
 public class DVariable{
     static class Variable{
         String type;
@@ -15,7 +16,7 @@ public class DVariable{
         int layout_id;
     }
 
-    static ArrayList<Variable> vars=new ArrayList<>();
+
     static Variable importVariable(String var_str, int area_id,int layout_id){
         Variable var=new Variable();
         var.area_id=area_id;
@@ -50,13 +51,14 @@ public class DVariable{
                     reassignToVar(getVariableByName(strs[0], area_id, layout_id), getVariableByName(strs[1], area_id, layout_id));
                 else
                     reassignToVal(getVariableByName(strs[0], area_id, layout_id), DClass.getTypeOf(strs[1]), strs[1], area_id, layout_id);
-            }else{
-                String[] temp=strs[0].split("\\.");
-                Variable v=getVariableByName(temp[0],0,0);
-                if(v==null){
-                    getClassByName(temp[0]).reassignAttribute(temp[1],requireReturn(strs[1],area_id,layout_id).value);
-                }else
-                    getObjectById(requireReturn(temp[0],area_id,layout_id).value).reassignAttribute(temp[1],requireReturn(strs[1],area_id,layout_id).value,area_id,layout_id);
+            }else {
+                String[] temp = strs[0].split("\\.");
+                Variable v = getVariableByName(temp[0], 0, 0);
+                if (v == null) {
+                    getClassByName(temp[0]).reassignAttribute(temp[1], requireReturn(strs[1], area_id, layout_id).value);
+                } else {
+                    getObjectById(requireReturn(temp[0], area_id, layout_id).value).reassignAttribute(temp[1], requireReturn(strs[1], area_id, layout_id).value, area_id, layout_id);
+                }
             }
         }
     }

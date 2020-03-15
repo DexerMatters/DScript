@@ -204,6 +204,16 @@ public class DExpression {
         }
         return null;
     }
+    public static void removeNoteExpressions(String str){
+        /*String[] strs=str.split("");
+        String temp="";
+        int mode=0;
+        for(String s:strs){
+            if(s.equals("\"")&&mode==0)
+                mode=1;
+
+        }*/
+    }
     public static String cleanBracket(String str){
         str=str.trim();
         if(str.length()>2) {

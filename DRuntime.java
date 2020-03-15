@@ -16,7 +16,7 @@ public class DRuntime {
         if(line.matches("^(if|unless)\\s*\\(.+\\)\\s*\\{.*}")) {
             ParamIns condition = requireReturn(line.substring(indexOf(line, '(') + 1, indexOf(line, ')')),area_id,layout_id);
             String flag=line.substring(0,indexOf(line, '('));
-            String[] code_strs=getContentInBracket_(code,BRACLET_CURLY);
+            String[] code_strs=getContentInBracket_(line,BRACLET_CURLY);
             DCode runs = new DCode(code_strs[0]);
             if (flag.equals("if")&&isTrue(condition))
                 new DComplier(runs).compile(0, 0);
@@ -33,7 +33,7 @@ public class DRuntime {
         }//for(Integer i=0 > 15)
         if(line.matches("^for\\s*\\(.+\\)\\s*\\{.*}$")){
             String condition =line.substring(indexOf(line, '(') + 1, indexOf(line, ')'));
-            String code_strs=getContentInBracket(code,BRACLET_CURLY);
+            String code_strs=getContentInBracket(line,BRACLET_CURLY);
             String[] conds=split(condition,"~");
             if(conds.length==2) {
                 Variable v = importVariable(conds[0], area_id, layout_id);
@@ -71,14 +71,8 @@ public class DRuntime {
         }
         if(line.matches("^async\\s*\\(.+\\)\\s*\\{.*}$")){
             String name =line.substring(indexOf(line, '(') + 1, indexOf(line, ')'));
-            String code_strs=getContentInBracket(code,BRACLET_CURLY);
-            thrs.put(name,new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    new DComplier(new DCode(code_strs)).compile(0,0);
-                }
-            }));
-            thrs.get(name).start();
+            String code_strs=getContentInBracket(line,BRACLET_CURLY);
+            importVariable("var "+name+"="+"new Thread(\""+name+"\",\""+code_strs+"\")",area_id,layout_id);
         }
         if(line.matches("^rm\\s+[a-zA-Z_]+$")){
             String name =line.split("\\s+")[1];

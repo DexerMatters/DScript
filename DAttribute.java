@@ -19,6 +19,7 @@ public class DAttribute {
         this.name=name;
         this.vis=vis;
         this.val=val;
+
     }
 
     public ParamIns getVal() {
@@ -31,6 +32,11 @@ public class DAttribute {
     public int getState(){
         return state;
     }
+
+    public int getVisibility() {
+        return vis;
+    }
+
     public void setVal(ParamIns val) {
         this.val = val;
     }

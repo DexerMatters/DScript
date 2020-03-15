@@ -3,6 +3,7 @@ import java.util.Arrays;
 
 import static com.dexer.dscript.DClass.requireReturn;
 import static com.dexer.dscript.DVariable.*;
+import static com.dexer.dscript.DRes.*;
 public class DReference{
     public static char[]
             BRACKET_SQUARE={'[','}'},
@@ -10,6 +11,7 @@ public class DReference{
             BRACLET_STRING={'\"','\"'},
             BRACLET_CURLY={'{','}'};
     public static DComplier comp;
+
     public static void reassignToVar(Variable leftV, Variable rightV){
         if(leftV.type.charAt(leftV.type.length()-1)!='$')
             vars.get(indexOf(leftV)).value=rightV.value;

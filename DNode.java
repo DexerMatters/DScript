@@ -3,7 +3,7 @@ package com.dexer.dscript;
 import java.util.ArrayList;
 
 public class DNode {
-    private int id;
+    private String id;
     private String type;
     private String content;
     private String condition="none";
@@ -19,7 +19,7 @@ public class DNode {
     public void setContent(String content) {
         this.content = content;
     }
-    public void setId(int id){
+    public void setId(String id){
         this.id=id;
     }
     public String getType() {
@@ -34,7 +34,7 @@ public class DNode {
         return content;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 

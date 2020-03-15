@@ -25,7 +25,7 @@ public class DFunction {
         }
     }
     static class NativeCode{
-        public ParamIns run(ParamIns[] pi){
+        public ParamIns run(ParamIns[] pi,String id){
             return null;
         };
 
@@ -53,7 +53,7 @@ public class DFunction {
         //else this.code_str=(String) code;
 
     }
-    public ParamIns run(ParamIns[] ins,int vis){
+    public ParamIns run(ParamIns[] ins,String id,int vis){
         if (ins.length == params.length)
             for (int i = 0; i < ins.length; i++) {
                 if (!(ins[i].type.equals(params[i].type) || params[i].type.equals("Object"))) {
@@ -61,8 +61,16 @@ public class DFunction {
                 }
             }
         if (code_code != null && this.vis == vis)
-            return code_code.run(ins);
+            return code_code.run(ins,id);
         return null;
+    }
+
+    public int getVisibility() {
+        return vis;
+    }
+
+    public NativeCode getCode() {
+        return code_code;
     }
 
     public String getName() {
