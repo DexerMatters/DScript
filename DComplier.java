@@ -15,7 +15,7 @@ public class DComplier{
                     "   Copyright c Dexer Matters\n" +
                     "   Feedback:  https://github.com/DexerMatters/DScript/issues\n" +
                     "   Github:    https://github.com/DexerMatters/DScript\n" +
-                    "   Contract:  2353708378@qq.com or DexerMatters@gmail.com"+
+                    "   Contact:  2353708378@qq.com or DexerMatters@gmail.com"+
             "\n//////////////////";
     private DNode main_node=new DNode();
     private int times=0;
@@ -56,12 +56,13 @@ public class DComplier{
             }
         }
     }
-    public void preLoad(){
+    public void preload(){
     }
     public void compile(int area_id,int layout_id){
         String code_str=code.getCode();
         String line="";
         DPreload.load();
+        preload();
         //getClassByName("System").runFunction("output",new ParamIns[]{new ParamIns("String","hello")});
         for (int i = 0; i < code_str.length(); i++) {
 

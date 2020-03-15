@@ -11,8 +11,6 @@ import static com.dexer.dscript.DFunction.*;
 
 public class Main {
     public static void main(String[] args) {
-        new DComplier(new File("D:\\java project\\DScript\\out\\artifacts\\dscript\\script.ds")).compile(0,0);
-//
         Scanner scan_mod = new Scanner(System.in);
         String[] params = scan_mod.nextLine().split(" ");
         if (params[0].equals("dsc")) {
@@ -28,9 +26,9 @@ public class Main {
                     break;
                 case "-help":
                     System.out.println("//////////////////\n" +
-                            "dsc -v\tTo check the version\n" +
+                            "dsc -v\t\t\t\t\tTo check the version\n" +
                             "dsc -run <file_path>\tTo run a script\n" +
-                            "dsc -help\tTo show help\n"+
+                            "dsc -help\t\t\t\tTo show help\n"+
                             "//////////////////");
                     break;
                 default:
@@ -38,6 +36,6 @@ public class Main {
             }
         }else
             System.out.println("Unknown command.Please check commands with \"dsc -help\"");
-         //main(args);
+         main(args);
     }
 }
