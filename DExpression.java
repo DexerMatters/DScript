@@ -204,15 +204,14 @@ public class DExpression {
         }
         return null;
     }
-    public static void removeNoteExpressions(String str){
+    public static String removeNoteExpressions(String str){
         /*String[] strs=str.split("");
         String temp="";
         int mode=0;
-        for(String s:strs){
-            if(s.equals("\"")&&mode==0)
-                mode=1;
-
+        for (int i = 0; i < strs.length; i++) {
+            if(strs[i]+strs[i-1]==)
         }*/
+        return null;
     }
     public static String cleanBracket(String str){
         str=str.trim();

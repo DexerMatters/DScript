@@ -11,13 +11,16 @@ public class DObject {
     private String type;
     private ParamIns[] params;
     private DFunction[] funcs;
+    private DFunction constructor;
     private DAttribute[] attrs;
     private String id;
     DObject(String type){
         this.type=type;
+        DFunction c=getClassByName(type).getConstructor();
+        constructor=new DFunction(c.getName(),c.getParams(),c.getState(),c.getVisibility(),c.getCode(),c.isNative());
         List<DFunction> list=new ArrayList<>();
         for(DFunction f:getClassByName(type).getAllFunctions()){
-            list.add(new DFunction(f.getName(),f.getParams(),f.getState(),f.getVisibility(),f.getCode()));
+            list.add(new DFunction(f.getName(),f.getParams(),f.getState(),f.getVisibility(),f.getCode(),f.isNative()));
         }
         funcs=list.toArray(new DFunction[0]);
 
@@ -60,10 +63,6 @@ public class DObject {
         return null;
     }
     public void runConstructor(ParamIns[] params,String id,int vis){
-        for(DFunction func : funcs){
-            if(func.getName().equals("constructor")) {
-                func.run(params,id, vis);
-            }
-        }
+        constructor.run(params,id,vis);
     }
 }

@@ -21,7 +21,7 @@ public class DReference{
             vars.get(indexOf(leftV)).value=requireReturn(value,area_id,layout_id).value;
     }
     public static boolean isVaild(Variable v,int area_id,int layout_id,String name){
-        return v.area_id==area_id&&v.layout_id<=layout_id&&v.name.equals(name);
+        return (v.area_id==area_id||v.layout_id<=layout_id)&&v.name.equals(name);
     }
     public static String getTypeByName(String name,int area_id,int layout_id){
         String r=null;

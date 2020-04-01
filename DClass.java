@@ -10,15 +10,16 @@ import static com.dexer.dscript.DVariable.*;
 import static com.dexer.dscript.DFunction.*;
 import static com.dexer.dscript.DExpression.*;
 import static com.dexer.dscript.DTools.*;
-public class DClass {
-    private static ArrayList<Class> cls=new ArrayList<>();
-    private static ArrayList<DObject> objs=new ArrayList<>();
+import static com.dexer.dscript.DRes.*;
+public class DClass{
+
     public static class Class {
         private String name;
         private ArrayList<DFunction> static_func=new ArrayList<>(),
                                     dymastic_func=new ArrayList<>();
         private ArrayList<DAttribute> static_attr=new ArrayList<>(),
                                     dymastic_attr=new ArrayList<>();
+        private DFunction constructor;
         private Class(String name){
             this.name=name;
         }
@@ -31,10 +32,12 @@ public class DClass {
 
 
         public void addFunction(DFunction function){
-            if(function.getState()==DFunction.DYMASTIC||function.getState()==(DFunction.DYMASTIC|DFunction.NATIVE)) {
-                dymastic_func.add(function);
-            }else
-                static_func.add(function);
+            if(!function.getName().equals("constructor"))
+                if(function.getState()==DFunction.DYMASTIC) {
+                    dymastic_func.add(function);
+                }else
+                    static_func.add(function);
+            else constructor=function;
         }
         public void addAttribute(DAttribute attribute){
             if(attribute.getState()==DAttribute.DYMASTIC||attribute.getState()==(DAttribute.DYMASTIC|DAttribute.NATIVE))
@@ -55,6 +58,9 @@ public class DClass {
         }
         public DAttribute[] getAllAttribute(){
             return dymastic_attr.toArray(new DAttribute[0]);
+        }
+        public DFunction getConstructor(){
+            return constructor;
         }
         public ParamIns reassignAttribute(String name,String value){
             for (int i = 0; i < static_attr.size(); i++) {
@@ -87,7 +93,7 @@ public class DClass {
             return new ParamIns(type, getClassByName(type).newInstance(pis.toArray(new ParamIns[0]), PUBLIC));
         }
         else {
-            return new ParamIns(type, getClassByName(type).newInstance(new ParamIns[]{new ParamIns("Void", "")}, PUBLIC));
+            return new ParamIns(type, getClassByName(type).newInstance(new ParamIns[0], PUBLIC));
         }
     }
     static ParamIns runFunction(String str,int area_id,int layout_id){
@@ -100,9 +106,13 @@ public class DClass {
             String params;
             ArrayList<ParamIns> pis=new ArrayList<>();
             params=getContentInBracket(str,BRACKET_NORMAL);
-            for(String s : split(params,","))
-                pis.add(requireReturn(s.trim(),area_id,layout_id));
-            ParamIns[] array=pis.toArray(new ParamIns[0]);
+            ParamIns[] array;
+            if(params.equals("")) array=new ParamIns[0];
+            else {
+                for (String s : split(params, ","))
+                    pis.add(requireReturn(s.trim(), area_id, layout_id));
+                array = pis.toArray(new ParamIns[0]);
+            }
             Variable v=getVariableByName(strs[0], area_id, layout_id);
             if(v==null)
                 return getClassByName(strs[0]).runStaticFunction(strs[1].substring(0,indexOf(strs[1],'(')),array,"null",PUBLIC);
@@ -161,7 +171,7 @@ public class DClass {
 
         switch (getTypeOf(str)){
             case "String":
-                return new ParamIns(getTypeOf(str),str.substring(1,str.length()-1));
+                return new ParamIns(getTypeOf(str),str);
             case "Object":
 
                 return new ParamIns(getObjectById(str).getType(),str.substring(1,str.length()-1));

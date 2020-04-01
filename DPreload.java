@@ -10,18 +10,18 @@ class DPreload {
         createClass("System");
         createClass("Thread");
         getClassByName("System").addFunction(new DFunction("output",
-                new Param[]{new Param("Object","str")}, STATIC|NATIVE,PUBLIC,
+                new Param[]{new Param("Object","str")}, STATIC,PUBLIC,
                 new NativeCode(){
                     @Override
                     public ParamIns run(ParamIns[] pi,String id) {
                         System.out.println(pi[0].value);
                         return null;
                     }
-                }));
-        getClassByName("System").addAttribute(new DAttribute("VERSION",new ParamIns("String$",VERSION),STATIC|NATIVE,PUBLIC));
-        getClassByName("Thread").addAttribute(new DAttribute("name",new ParamIns("String","null"),DYMASTIC|NATIVE,PUBLIC));
+                },true));
+        getClassByName("System").addAttribute(new DAttribute("VERSION",new ParamIns("String$",VERSION),STATIC,PUBLIC));
+        getClassByName("Thread").addAttribute(new DAttribute("name",new ParamIns("String","null"),DYMASTIC,PUBLIC));
         getClassByName("Thread").addFunction(new DFunction("constructor",
-                new Param[]{new Param("String","name"),new Param("String","code")},DYMASTIC|NATIVE,PUBLIC,
+                new Param[]{new Param("String","name"),new Param("String","code")},DYMASTIC,PUBLIC,
                 new NativeCode(){
                     @Override
                     public ParamIns run(ParamIns[] pi,String id) {
@@ -34,8 +34,8 @@ class DPreload {
                         getObjectById(id).reassignAttribute("name","\""+pi[0].value+"\"",0,0);
                         return null;
                     }
-                }));
-        getClassByName("Thread").addFunction(new DFunction("run",new Param[0],DYMASTIC|NATIVE,PUBLIC,
+                },true));
+        getClassByName("Thread").addFunction(new DFunction("run",new Param[0],DYMASTIC,PUBLIC,
                 new NativeCode(){
                     @Override
                     public ParamIns run(ParamIns[] pi, String id) {
@@ -43,7 +43,7 @@ class DPreload {
                         threadMap.get(name).start();
                         return null;
                     }
-                }));
+                },true));
         //getClassByName("Thread").addFunction(new DFunction("run",);
     }
 }

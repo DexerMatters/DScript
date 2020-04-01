@@ -2,11 +2,10 @@ package com.dexer.dscript;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import static com.dexer.dscript.DRes.*;
 import static com.dexer.dscript.DReference.*;
 import static com.dexer.dscript.DClass.*;
 import static com.dexer.dscript.DExpression.*;
-import static com.dexer.dscript.DRes.*;
 public class DVariable{
     static class Variable{
         String type;
@@ -90,6 +89,13 @@ public class DVariable{
     }
     static void removeVariable(Variable v){
         vars.remove(v);
+    }
+    static void removeVariableByAreaId(int id){
+        ArrayList<Variable> arr=(ArrayList<Variable>) vars.clone();
+        for(Variable v:arr){
+            if(v.area_id==id)
+                vars.remove(v);
+        }
     }
     static Variable createVariable(String type,String name,String value,int area_id,int layout_id){
         Variable v=new Variable();

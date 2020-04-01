@@ -69,6 +69,7 @@ public class DComplier{
             if(code_str.charAt(i)==';'){
                 if(!(hasCovered(code_str,i,BRACLET_STRING)||hasCovered(code_str,i,BRACLET_CURLY)||hasCovered(code_str,i,BRACKET_NORMAL))) {
                     line = line.trim();
+                    DClassExpression.solveClass(line);
                     importVariable(line, area_id, layout_id);
                     assignVariable(line, area_id, layout_id);
                     assignVariableAs(line, area_id, layout_id);

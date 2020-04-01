@@ -35,8 +35,10 @@ public class DTools {
                 a.add(p);
             }
         }
+        if(a.size()==0) return new String[]{s};
+        while(a.contains(""))
+            a.remove("");
         String[] res=a.toArray(new String[0]);
-        if(res.length==0) return new String[]{s};
         return res;
     }
     static String getContentInBracket(String str,char[] c){
@@ -52,6 +54,7 @@ public class DTools {
             if(mode==1)
                 res+=strs[i];
         }
+        if(res.equals("")) return null;
         return res.substring(1);
 
     }
