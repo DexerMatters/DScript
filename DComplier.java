@@ -19,6 +19,7 @@ public class DComplier{
             "\n//////////////////";
     private DNode main_node=new DNode();
     private int times=0;
+    private boolean enabled=true;
     public static DCode code;
     public static int AREA_ID=0,LAYOUT_ID=0;
     public static DComplier complier=null;
@@ -58,6 +59,10 @@ public class DComplier{
     }
     public void preload(){
     }
+    public void close(){
+        enabled=false;
+    }
+
     public void compile(int area_id,int layout_id){
         String code_str=code.getCode();
         String line="";
@@ -66,7 +71,7 @@ public class DComplier{
         //getClassByName("System").runFunction("output",new ParamIns[]{new ParamIns("String","hello")});
         for (int i = 0; i < code_str.length(); i++) {
 
-            if(code_str.charAt(i)==';'){
+            if(code_str.charAt(i)==';'&&enabled){
                 if(!(hasCovered(code_str,i,BRACLET_STRING)||hasCovered(code_str,i,BRACLET_CURLY)||hasCovered(code_str,i,BRACKET_NORMAL))) {
                     line = line.trim();
                     DClassExpression.solveClass(line);

@@ -207,7 +207,7 @@ public class DClass{
     static void createClass(String name){
         cls.add(new Class(name));
     }
-    static Class getClassByName(String name){
+    public static Class getClassByName(String name){
         for (int i = 0; i < cls.size(); i++) {
             if(name.equals(cls.get(i).name)){
                 return cls.get(i);
@@ -215,7 +215,7 @@ public class DClass{
         }
         return null;
     }
-    static DObject getObjectById(String id){
+    public static DObject getObjectById(String id){
         for (int i = 0; i < objs.size(); i++) {
             if(id.equals(objs.get(i).getId())){
                 return objs.get(i);

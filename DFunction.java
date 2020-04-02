@@ -10,7 +10,7 @@ import static com.dexer.dscript.DVariable.*;
 import static com.dexer.dscript.DReference.*;
 import static com.dexer.dscript.DClass.*;
 public class DFunction {
-    static class Param{
+    public static class Param{
         public String type;
         public String name;
         public Param(String type,String name){
@@ -18,7 +18,7 @@ public class DFunction {
             this.type=type;
         }
     }
-    static class ParamIns{
+    public static class ParamIns{
         public String type;
         public String value;
         public ParamIns(String type,String value){
@@ -31,7 +31,7 @@ public class DFunction {
             return this.value.equals(((ParamIns) obj).value);
         }
     }
-    static class NativeCode{
+    public static class NativeCode{
         public ParamIns run(ParamIns[] pi,String id){
             return null;
         };
@@ -82,7 +82,7 @@ public class DFunction {
                             index++;
                         }
                     new DComplier(new DCode(code_str)).compile(1,0);
-                    Variable returns = getVariableByName("%return%",1,0);
+                    Variable returns = getVariableByName("__return",1,0);
                     for(Variable a : list) removeVariable(a);
                     removeVariableByAreaId(1);
                     if(returns!=null)

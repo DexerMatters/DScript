@@ -1,4 +1,6 @@
 package com.dexer.dscript;
+import com.dexer.dscript.dni.DRegister;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -31,11 +33,14 @@ public class DClassExpression {
 
             int state=DYMASTIC;
             int vis=PRIVATE;
+            boolean isN=false;
             for(String word : words){
                 if(indexOfVis(word)!=-1)
                     vis=indexOfVis(word);
                 else if(word.equals("static"))
                     state=STATIC;
+                else if(word.equals("native"))
+                    isN=true;
             }
             if(code==null){
                 String[] vals=split(words[words.length-1],"=");
@@ -62,8 +67,10 @@ public class DClassExpression {
                 if (name_.equals(name)) {
                     getClassByName(name).addFunction(new DFunction("constructor", params, state, vis, code.trim(), false));
                 } else {
-                    getClassByName(name).addFunction(new DFunction(name_, params, state, vis, code.trim(), false));
-
+                    if(!isN)
+                        getClassByName(name).addFunction(new DFunction(name_, params, state, vis, code.trim(), false));
+                    else
+                        getClassByName(name).addFunction(new DFunction(name_, params, state, vis,DRegister.gain(name,name_), true));
                 }
             }
         }
