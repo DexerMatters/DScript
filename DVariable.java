@@ -66,9 +66,9 @@ public class DVariable{
             String temp=cleanBracket(str.substring(0,str.length()-2).trim());
             String sym=str.substring(str.length()-2).trim();
             Variable v=getVariableByName(temp,area_id,layout_id);
-            if(v.type.equals("Integer")) {
+            if(v.type.equals("Number")) {
                 int del= sym.equals("++")?1:-1;
-                reassignToVal(v, "Integer", String.valueOf(Integer.parseInt(v.value) + del), area_id, layout_id);
+                reassignToVal(v, "Number", String.valueOf(Integer.parseInt(v.value) + del), area_id, layout_id);
                 return getVariableByName(temp,area_id,layout_id).value;
             }
             else new DError(comp,"type");
@@ -77,10 +77,10 @@ public class DVariable{
             String temp=str.substring(2).trim();
             String sym=str.substring(0,2).trim();
             Variable v=getVariableByName(temp,area_id,layout_id);
-            if(v.type.equals("Integer")) {
+            if(v.type.equals("Number")) {
                 int del= sym.equals("++")?1:-1;
                 String v_=v.value;
-                reassignToVal(v, "Integer", String.valueOf(Integer.parseInt(v.value) + del), area_id, layout_id);
+                reassignToVal(v, "Number", String.valueOf(Integer.parseInt(v.value) + del), area_id, layout_id);
                 return v_;
             }
             else new DError(comp,"type");

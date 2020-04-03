@@ -102,20 +102,20 @@ public class DExpression {
            }else
                return null;
        }
-       if((value=assignVariableAs(str,area_id,layout_id)) != null){
-           return new ParamIns("Integer",value);
+       else if((value=assignVariableAs(str,area_id,layout_id)) != null){
+           return new ParamIns("Number",value);
        }
-       if(str.matches("^\\(\\w+\\)\\s*.+$")){
-           String type_casted=str.substring(1,str.indexOf(")"));
-           String temp=cleanBracket(str.substring(str.indexOf(")")+1).trim());
-           String val=requireReturn(temp,area_id,layout_id).value;
-           String type=requireReturn(temp,area_id,layout_id).type;
-           if(type.equals("String"))
-               return new ParamIns(type_casted,val.substring(1,val.length()-1));
-           else
-               return new ParamIns(type_casted,"\""+val+"\"");
-       }
-       if(str.matches("^.+\\?.+(:.+)?$")){
+//       if(str.matches("^\\(\\w+\\)\\s*.+$")){
+//           String type_casted=str.substring(1,str.indexOf(")"));
+//           String temp=cleanBracket(str.substring(str.indexOf(")")+1).trim());
+//           String val=requireReturn(temp,area_id,layout_id).value;
+//           String type=requireReturn(temp,area_id,layout_id).type;
+//           if(type.equals("String"))
+//               return new ParamIns(type_casted,val.substring(1,val.length()-1));
+//           else
+//               return new ParamIns(type_casted,"\""+val+"\"");
+//       }
+       else if(str.matches("^.+\\?.+(:.+)?$")){
             int mode=0;
             String condition="",
                     iftrue="",
@@ -146,7 +146,7 @@ public class DExpression {
                         return requireReturn(condition.substring(0,isInequality(condition)),area_id,layout_id);
             }
        }
-
+       else return DMathExpression.solveMathExpression(str.trim(),area_id,layout_id);
        return null;
     }
     public static Integer[] isBoolExpressionResult(String str){

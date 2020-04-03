@@ -15,8 +15,8 @@ public class DClassExpression {
 
         String fore=split(line,"{")[0];
         String cont=getContentInBracket(line,BRACLET_CURLY);
-        String keyword=line.substring(0,5);
-        if(!keyword.equals("class")) return null;
+        String keyword=line.substring(0,3);
+        if(!keyword.equals("cls")) return null;
         String[] temps=fore.split("\\s+");
 
         String name=temps[1];
@@ -37,9 +37,9 @@ public class DClassExpression {
             for(String word : words){
                 if(indexOfVis(word)!=-1)
                     vis=indexOfVis(word);
-                else if(word.equals("static"))
+                else if(word.equals("stat"))
                     state=STATIC;
-                else if(word.equals("native"))
+                else if(word.equals("nat"))
                     isN=true;
             }
             if(code==null){

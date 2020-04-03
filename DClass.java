@@ -139,8 +139,8 @@ public class DClass{
         index=0;
         if(str.matches("^\".*\"$"))
             return "String";
-        if(str.matches("^-?[0-9]+$"))
-            return "Integer";
+        if(str.matches("^-?[0-9]+\\.*[0-9]+$"))
+            return "Number";
         if(str.matches("^-?[0-9]+\\.[0-9]+$"))
             return "Float";
         if(str.matches("^(true|false)$"))
