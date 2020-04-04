@@ -67,6 +67,9 @@ public class DComplier{
     }
 
     public void compile(int area_id,int layout_id){
+        compile(area_id, layout_id,"$Math");
+    }
+    public void compile(int area_id,int layout_id,String clazz){
         String code_str=code.getCode();
         String line="";
         DPreload.load();
@@ -90,6 +93,7 @@ public class DComplier{
 
         }
     }
+
     public String getFileAbsolutePath(){
         return file.getAbsolutePath();
     }

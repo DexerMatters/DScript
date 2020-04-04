@@ -67,7 +67,7 @@ public class DClassExpression {
                 if (!getContentInBracket(str, BRACKET_NORMAL).equals("")) {
                     for (String s : param_strs) {
                         String[] temp = s.trim().split("\\s+");
-                        pl.add(new Param(temp[0], temp[1]));
+                        pl.add(new Param(temp[0].equals("var")?"Object":temp[0], temp[1]));
                     }
                     params = pl.toArray(new Param[0]);
                 } else params = new Param[0];

@@ -1,4 +1,5 @@
 package com.dexer.dscript;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -11,14 +12,18 @@ public class DObject {
     private String type;
     private ParamIns[] params;
     private DFunction[] funcs;
-    private DFunction constructor;
+    private ArrayList<DFunction> constructor=new ArrayList<>();
     private DAttribute[] attrs;
     private String id;
     DObject(String type){
         this.type=type;
-        DFunction c=getClassByName(type).getConstructor();
-        if(c!=null)
-            constructor=new DFunction(c.getName(),c.getParams(),c.getState(),c.getVisibility(),c.getCode(),c.isNative());
+        ArrayList<DFunction> c=getClassByName(type).getConstructor();
+        if(c!=null) {
+            for(DFunction i : c){
+                constructor.add(new DFunction(i.getName(), i.getParams(), i.getState(), i.getVisibility(), i.getCode(), i.isNative()));
+            }
+
+        }
             List<DFunction> list=new ArrayList<>();
             for(DFunction f:getClassByName(type).getAllFunctions()){
                 list.add(new DFunction(f.getName(),f.getParams(),f.getState(),f.getVisibility(),f.getCode(),f.isNative()));
@@ -58,13 +63,28 @@ public class DObject {
     }
     public ParamIns runFunction(String name,ParamIns[] params,String id,int vis){
         for(DFunction func : funcs){
-            if(func.getName().equals(name))
-                return func.run(params,id,vis);
+            if(func.getName().equals(name)&&func.getParams().length==params.length){
+                for (int i = 0; i < params.length; i++) {
+                    if(params[i].type.equals(func.getParams()[i].type)||func.getParams()[i].type.equals("Object")) {
+                        return func.run(params, id, vis);
+                    }
+                }
+            }
         }
         return null;
     }
     public void runConstructor(ParamIns[] params,String id,int vis){
-        if(constructor!=null)
-            constructor.run(params,id,vis);
+        if(constructor!=null) {
+            for(DFunction c : constructor){
+                if(c.getParams().length==params.length)
+                    for(int i=0;i<params.length;i++){
+                        if(params[i].type.equals(c.getParams()[i].type)){
+                            c.run(params, id, vis);
+                            return;
+                        }
+                    }
+            }
+
+        }
     }
 }

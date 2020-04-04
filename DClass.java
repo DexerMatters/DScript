@@ -19,7 +19,7 @@ public class DClass{
                                     dymastic_func=new ArrayList<>();
         private ArrayList<DAttribute> static_attr=new ArrayList<>(),
                                     dymastic_attr=new ArrayList<>();
-        private DFunction constructor;
+        private ArrayList<DFunction> constructor=new ArrayList<>();
         private Class(String name){
             this.name=name;
         }
@@ -37,7 +37,7 @@ public class DClass{
                     dymastic_func.add(function);
                 }else
                     static_func.add(function);
-            else constructor=function;
+            else constructor.add(function);
         }
         public void addAttribute(DAttribute attribute){
             if(attribute.getState()==DAttribute.DYMASTIC||attribute.getState()==(DAttribute.DYMASTIC|DAttribute.NATIVE))
@@ -45,10 +45,14 @@ public class DClass{
             else
                 static_attr.add(attribute);
         }
-        public ParamIns runStaticFunction(String name, DFunction.ParamIns[] paramIns,String id,int vis){
-            for(DFunction func : static_func) {
-                if (func.getName().equals(name)) {
-                    return func.run(paramIns,id,vis);
+        public ParamIns runStaticFunction(String name, DFunction.ParamIns[] params,String id,int vis){
+            for(DFunction func :static_func){
+                if(func.getName().equals(name)&&func.getParams().length==params.length){
+                    for (int i = 0; i < params.length; i++) {
+                        if(params[i].type.equals(func.getParams()[i].type)||func.getParams()[i].type.equals("Object")) {
+                            return func.run(params, id, vis);
+                        }
+                    }
                 }
             }
             return null;
@@ -59,7 +63,7 @@ public class DClass{
         public DAttribute[] getAllAttribute(){
             return dymastic_attr.toArray(new DAttribute[0]);
         }
-        public DFunction getConstructor(){
+        public ArrayList<DFunction> getConstructor(){
             return constructor;
         }
         public ParamIns reassignAttribute(String name,String value){
