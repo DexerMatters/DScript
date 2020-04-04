@@ -43,11 +43,18 @@ public class DClassExpression {
                     isN=true;
             }
             if(code==null){
-                String[] vals=split(words[words.length-1],"=");
-                getClassByName(name).addAttribute(
-                        new DAttribute(vals[0].trim(),
-                                requireReturn(vals[1], 0,0),
-                                state,vis));
+                if(words[words.length-1].contains("=")) {
+                    String[] vals = split(words[words.length - 1], "=");
+                    getClassByName(name).addAttribute(
+                            new DAttribute(vals[0].trim(),
+                                    requireReturn(vals[1], 0, 0),
+                                    state, vis));
+                }else{
+                    getClassByName(name).addAttribute(
+                            new DAttribute(words[words.length - 1],
+                                    new ParamIns("Null","null"),
+                                    state, vis));
+                }
             }
             else {
 
@@ -65,7 +72,10 @@ public class DClassExpression {
                     params = pl.toArray(new Param[0]);
                 } else params = new Param[0];
                 if (name_.equals(name)) {
-                    getClassByName(name).addFunction(new DFunction("constructor", params, state, vis, code.trim(), false));
+                    if(!isN)
+                        getClassByName(name).addFunction(new DFunction("constructor", params, state, vis, code.trim(), false));
+                    else
+                        getClassByName(name).addFunction(new DFunction("constructor", params, state, vis, DRegister.gain(name,"$"), true));
                 } else {
                     if(!isN)
                         getClassByName(name).addFunction(new DFunction(name_, params, state, vis, code.trim(), false));

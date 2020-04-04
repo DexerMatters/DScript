@@ -20,20 +20,29 @@ public class DVariable{
         Variable var=new Variable();
         var.area_id=area_id;
         var.layout_id=layout_id;
-        if(var_str.matches("^(var|con)\\s+[\\W\\w_\\d]+\\s*=\\s*.+$")) {
-            String[] strs = addBehind(var_str.split("="),"=");
+        if(var_str.matches("^(var|con)\\s+[\\W\\w_\\d]+(\\s*=\\s*.+)?$")) {
+            if(var_str.contains("=")) {
 
-            if (strs.length == 2) {
-                DFunction.ParamIns pi=requireReturn(strs[1], area_id, layout_id);
-                var.value = pi.value;
-                String[] s = strs[0].split("\\s+");
-                if (s.length == 2 && s[0].equals("var")) {
-                    var.type = DClass.getTypeOf(pi.value);
-                    var.name = s[1];
-                    vars.add(var);
+                String[] strs = addBehind(var_str.split("="), "=");
+                if (strs.length == 2) {
+                    DFunction.ParamIns pi = requireReturn(strs[1], area_id, layout_id);
+                    var.value = pi.value;
+                    String[] s = strs[0].split("\\s+");
+                    if (s.length == 2 && s[0].equals("var")) {
+                        var.type = DClass.getTypeOf(pi.value);
+                        var.name = s[1];
+                        vars.add(var);
+                    }
+                    if (s.length == 2 && s[0].equals("con")) {
+                        var.type = DClass.getTypeOf(requireReturn(strs[1], area_id, layout_id).value) + "$";
+                        var.name = s[1];
+                        vars.add(var);
+                    }
                 }
-                if(s.length==2&&s[0].equals("con")){
-                    var.type=DClass.getTypeOf(requireReturn(strs[1], area_id, layout_id).value)+"$";
+            }else{
+                String[] s = var_str.split("\\s+");
+                if(s[0].equals("var")){
+                    var.type="Null";
                     var.name=s[1];
                     vars.add(var);
                 }
@@ -44,12 +53,12 @@ public class DVariable{
     static void assignVariable(String str, int area_id,int layout_id) {
         if (str.matches("^[\\W\\w_\\d.]+\\s*=\\s*.+$")) {
             String[] strs = addBehind(str.split("="), "=");
-            if(strs[0].contains("var")) return;
+            if(strs[0].contains("var")||strs[0].contains("con")) return;
+            Variable tar=getVariableByName(strs[0], area_id, layout_id);
+            DFunction.ParamIns vic=requireReturn(strs[1],area_id,layout_id);
             if (strs[0].indexOf('.') == -1) {
-                if (getVariableByName(strs[1], area_id, layout_id) != null)
-                    reassignToVar(getVariableByName(strs[0], area_id, layout_id), getVariableByName(strs[1], area_id, layout_id));
-                else
-                    reassignToVal(getVariableByName(strs[0], area_id, layout_id), DClass.getTypeOf(strs[1]), strs[1], area_id, layout_id);
+                if(tar.type.equals("Null")) tar.type=vic.type;
+                reassignToVal(tar, vic.type, vic.value, area_id, layout_id);
             }else {
                 String[] temp = strs[0].split("\\.");
                 Variable v = getVariableByName(temp[0], 0, 0);

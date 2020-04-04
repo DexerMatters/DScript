@@ -1,4 +1,5 @@
 package com.dexer.dscript;
+import java.io.File;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,6 +83,22 @@ public class DRuntime {
             String val =line.split("\\s+")[1];
             importVariable("var __return="+val,1,0);
             comp.close();
+        }
+        if(line.matches("^imp\\s+.+$")){
+            String val =line.split("\\s+")[1];
+            File file_=new File(comp.getFileAbsolutePath());
+            //System.out.println(comp.getFileAbsolutePath());
+            File file=new File(file_.getParentFile().getAbsoluteFile()+File.separator+val);
+            new DComplier(file).compile(0,0);
+        }
+        if(line.matches("^imps\\s+.+$")){
+            String val =line.split("\\s+")[1];
+            File file_=new File(comp.getFileAbsolutePath());
+            File file=new File(file_.getParentFile().getAbsoluteFile()+File.separator+val);
+            File[] files=file.listFiles();
+            for(File f : files){
+                new DComplier(f).compile(0,0);
+            }
         }
     }
 }

@@ -17,11 +17,12 @@ public class DObject {
     DObject(String type){
         this.type=type;
         DFunction c=getClassByName(type).getConstructor();
-        constructor=new DFunction(c.getName(),c.getParams(),c.getState(),c.getVisibility(),c.getCode(),c.isNative());
-        List<DFunction> list=new ArrayList<>();
-        for(DFunction f:getClassByName(type).getAllFunctions()){
-            list.add(new DFunction(f.getName(),f.getParams(),f.getState(),f.getVisibility(),f.getCode(),f.isNative()));
-        }
+        if(c!=null)
+            constructor=new DFunction(c.getName(),c.getParams(),c.getState(),c.getVisibility(),c.getCode(),c.isNative());
+            List<DFunction> list=new ArrayList<>();
+            for(DFunction f:getClassByName(type).getAllFunctions()){
+                list.add(new DFunction(f.getName(),f.getParams(),f.getState(),f.getVisibility(),f.getCode(),f.isNative()));
+            }
         funcs=list.toArray(new DFunction[0]);
 
         List<DAttribute> list_=new ArrayList<>();
@@ -63,6 +64,7 @@ public class DObject {
         return null;
     }
     public void runConstructor(ParamIns[] params,String id,int vis){
-        constructor.run(params,id,vis);
+        if(constructor!=null)
+            constructor.run(params,id,vis);
     }
 }

@@ -20,6 +20,7 @@ public class DComplier{
     private DNode main_node=new DNode();
     private int times=0;
     private boolean enabled=true;
+    private File file;
     public static DCode code;
     public static int AREA_ID=0,LAYOUT_ID=0;
     public static DComplier complier=null;
@@ -29,6 +30,8 @@ public class DComplier{
         this.code=code;
     }
     public DComplier(File file){
+        DRuntime.comp=this;
+        this.file=file;
         StringBuffer sb=new StringBuffer();
         try {
             BufferedReader fis=new BufferedReader(new FileReader(file));
@@ -86,6 +89,9 @@ public class DComplier{
                 line+=code_str.charAt(i);
 
         }
+    }
+    public String getFileAbsolutePath(){
+        return file.getAbsolutePath();
     }
     public void onError(String message){
         System.out.println(message);

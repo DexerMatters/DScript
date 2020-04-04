@@ -44,6 +44,7 @@ class DPreload {
                         return null;
                     }
                 },true));
+
         //getClassByName("Thread").addFunction(new DFunction("run",);
     }
 }

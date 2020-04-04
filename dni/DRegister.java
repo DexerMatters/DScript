@@ -8,7 +8,9 @@ import static com.dexer.dscript.DFunction.*;
 public class DRegister {
     static Map<String,NativeCode> map=new HashMap<String,NativeCode>();
     static{
+        DArray.load();
         DTest.load();
+
     }
     static void registerNativeMethods(Map<String,NativeCode> map_){
         map.putAll(map_);
