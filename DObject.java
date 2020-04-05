@@ -1,9 +1,6 @@
 package com.dexer.dscript;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
-import java.util.Stack;
 
 import static com.dexer.dscript.DFunction.*;
 import static com.dexer.dscript.DClass.*;
@@ -54,21 +51,23 @@ public class DObject {
                 }
         }
     }
-    public ParamIns getAttribute(String name,int vis){
+    public ParamIns getAttribute(String name,int layout_id){
         for(DAttribute attr : attrs){
-            if(attr.getName().equals(name))
+            if(attr.getName().equals(name)&&(attr.getVisibility()==layout_id||layout_id==PRIVATE))
                 return attr.getVal();
         }
         return null;
     }
     public ParamIns runFunction(String name,ParamIns[] params,String id,int vis){
         for(DFunction func : funcs){
-            if(func.getName().equals(name)&&func.getParams().length==params.length){
-                for (int i = 0; i < params.length; i++) {
-                    if(params[i].type.equals(func.getParams()[i].type)||func.getParams()[i].type.equals("Object")) {
-                        return func.run(params, id, vis);
+            if(func.getName().equals(name)&&func.getParams().length==params.length&&(func.getVisibility()==vis||vis==PRIVATE)){
+                if(params.length!=0)
+                    for (int i = 0; i < params.length; i++) {
+                        if(params[i].type.equals(func.getParams()[i].type)||func.getParams()[i].type.equals("Object")) {
+                            return func.run(params, id, vis);
+                        }
                     }
-                }
+                else return func.run(params, id, vis);
             }
         }
         return null;
@@ -76,7 +75,7 @@ public class DObject {
     public void runConstructor(ParamIns[] params,String id,int vis){
         if(constructor!=null) {
             for(DFunction c : constructor){
-                if(c.getParams().length==params.length)
+                if(c.getParams().length==params.length&&(vis==PRIVATE||c.getVisibility()==vis))
                     for(int i=0;i<params.length;i++){
                         if(params[i].type.equals(c.getParams()[i].type)){
                             c.run(params, id, vis);

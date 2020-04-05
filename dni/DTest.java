@@ -1,6 +1,5 @@
 package com.dexer.dscript.dni;
 
-import com.dexer.dscript.DClass;
 import com.dexer.dscript.DFunction;
 import com.dexer.dscript.DFunction.*;
 import com.dexer.dscript.DObject;

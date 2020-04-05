@@ -20,15 +20,15 @@ public class DRuntime {
             String[] code_strs=getContentInBracket_(line,BRACLET_CURLY);
             DCode runs = new DCode(code_strs[0]);
             if (flag.equals("if")&&isTrue(condition))
-                new DComplier(runs).compile(0, 0);
+                new DComplier(runs).compile(area_id, layout_id);
             if (flag.equals("unless")&&!isTrue(condition))
-                new DComplier(runs).compile(0, 0);
+                new DComplier(runs).compile(area_id, layout_id);
             if(code_strs.length==2){
                 DCode elses=new DCode(code_strs[1]);
                 if (flag.equals("if")&&!isTrue(condition))
-                    new DComplier(elses).compile(0, 0);
+                    new DComplier(elses).compile(area_id, layout_id);
                 if (flag.equals("unless")&&isTrue(condition))
-                    new DComplier(elses).compile(0, 0);
+                    new DComplier(elses).compile(area_id, layout_id);
 
             }
         }//for(Integer i=0 > 15)
@@ -44,13 +44,13 @@ public class DRuntime {
                     for (int i = from; i <= to; i++) {
                         reassignToVal(v, v.type, Integer.toString(i), area_id, layout_id);
                         DCode runs = new DCode(code_strs);
-                        new DComplier(runs).compile(0, 0);
+                        new DComplier(runs).compile(area_id, layout_id);
                     }
                 }else{
                     for (int i = from; i >= to; i--) {
                         reassignToVal(v, v.type, Integer.toString(i), area_id, layout_id);
                         DCode runs = new DCode(code_strs);
-                        new DComplier(runs).compile(0, 0);
+                        new DComplier(runs).compile(area_id, layout_id);
                     }
                 }
                 removeVariable(v);
@@ -62,9 +62,9 @@ public class DRuntime {
                 while(DReference.isTrue(cond)){
 
                     DCode runs = new DCode(code_strs);
-                    new DComplier(runs).compile(0, 0);
+                    new DComplier(runs).compile(area_id,layout_id);
                     DCode runs_ = new DCode(conds[2]+";");
-                    new DComplier(runs_).compile(0, 0);
+                    new DComplier(runs_).compile(area_id,layout_id);
                     cond=requireReturn(conds[1],area_id,layout_id);
                 }
                 removeVariable(v);
@@ -81,7 +81,7 @@ public class DRuntime {
         }
         if(line.matches("^ret\\s+.+$")){
             String val =line.split("\\s+")[1];
-            importVariable("var __return="+val,1,0);
+            importVariable("var __return="+val,1,layout_id);
             comp.close();
         }
         if(line.matches("^imp\\s+.+$")){

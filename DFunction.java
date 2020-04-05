@@ -81,7 +81,7 @@ public class DFunction {
                             list.add(v);
                             index++;
                         }
-                    new DComplier(new DCode(code_str)).compile(1,0);
+                    new DComplier(new DCode(code_str)).compile(1,PRIVATE);
                     Variable returns = getVariableByName("__return",1,0);
                     for(Variable a : list) removeVariable(a);
                     removeVariableByAreaId(1);
@@ -101,7 +101,7 @@ public class DFunction {
                         return null;
                     }
         }
-        if (code_code != null && this.vis == vis)
+        if (code_code != null)
             return code_code.run(ins,id);
         return null;
     }

@@ -1,5 +1,4 @@
 package com.dexer.dscript;
-import javax.print.attribute.standard.MediaSize;
 
 import static com.dexer.dscript.DClass.*;
 import static com.dexer.dscript.DFunction.*;
@@ -31,7 +30,7 @@ class DPreload {
                                 new DComplier(new DCode(pi[1].value)).compile(0,0);
                             }
                         }));
-                        getObjectById(id).reassignAttribute("name","\""+pi[0].value+"\"",0,0);
+                        getObjectById(id).reassignAttribute("name","\""+pi[0].value+"\"",0,PRIVATE);
                         return null;
                     }
                 },true));

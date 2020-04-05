@@ -47,12 +47,14 @@ public class DClass{
         }
         public ParamIns runStaticFunction(String name, DFunction.ParamIns[] params,String id,int vis){
             for(DFunction func :static_func){
-                if(func.getName().equals(name)&&func.getParams().length==params.length){
-                    for (int i = 0; i < params.length; i++) {
-                        if(params[i].type.equals(func.getParams()[i].type)||func.getParams()[i].type.equals("Object")) {
-                            return func.run(params, id, vis);
+                if(func.getName().equals(name)&&func.getParams().length==params.length&&(func.getVisibility()==vis||vis==PRIVATE)){
+                    if(func.getParams().length!=0)
+                        for (int i = 0; i < params.length; i++) {
+                            if(params[i].type.equals(func.getParams()[i].type)||func.getParams()[i].type.equals("Object")) {
+                                return func.run(params, id, vis);
+                            }
                         }
-                    }
+                    else return func.run(params, id, vis);
                 }
             }
             return null;
@@ -75,9 +77,10 @@ public class DClass{
             }
             return null;
         }
-        public ParamIns getAttribute(String name){
+        public ParamIns getAttribute(String name, int layout_id){
             for(DAttribute attr : static_attr) {
                 if (attr.getName().equals(name)) {
+                    if(layout_id==attr.getVisibility()||layout_id==PRIVATE)
                     return attr.getVal();
                 }
             }
@@ -94,10 +97,10 @@ public class DClass{
         if(!temp.equals("")) {
             for (String s : split(temp, ","))
                 pis.add(requireReturn(s.trim(), area_id, layout_id));
-            return new ParamIns(type, getClassByName(type).newInstance(pis.toArray(new ParamIns[0]), PUBLIC));
+            return new ParamIns(type, getClassByName(type).newInstance(pis.toArray(new ParamIns[0]), layout_id));
         }
         else {
-            return new ParamIns(type, getClassByName(type).newInstance(new ParamIns[0], PUBLIC));
+            return new ParamIns(type, getClassByName(type).newInstance(new ParamIns[0], layout_id));
         }
     }
     static ParamIns runFunction(String str,int area_id,int layout_id){
@@ -119,10 +122,10 @@ public class DClass{
             }
             Variable v=getVariableByName(strs[0], area_id, layout_id);
             if(v==null)
-                return getClassByName(strs[0]).runStaticFunction(strs[1].substring(0,indexOf(strs[1],'(')),array,"null",PUBLIC);
+                return getClassByName(strs[0]).runStaticFunction(strs[1].substring(0,indexOf(strs[1],'(')),array,"null",layout_id);
             else{
                 DObject obj=getObjectById(requireReturn(strs[0],area_id,layout_id).value);
-                return obj.runFunction(strs[1].substring(0,indexOf(strs[1],'(')),array,obj.getId(),PUBLIC);
+                return obj.runFunction(strs[1].substring(0,indexOf(strs[1],'(')),array,obj.getId(),layout_id);
             }
             //System.out.println(strs[1]+"|"+name+"|"+params);
         }
@@ -132,10 +135,10 @@ public class DClass{
         String[] temp=split(str,".");
         Variable v=getVariableByName(temp[0], area_id, layout_id);
         if(v==null)
-            return getClassByName(temp[0]).getAttribute(temp[1]);
+            return getClassByName(temp[0]).getAttribute(temp[1],layout_id);
         else {
             //System.out.println(getObjectById(requireReturn(temp[0], area_id, layout_id).value).getAttribute(temp[1], PUBLIC));
-            return getObjectById(requireReturn(temp[0], area_id, layout_id).value).getAttribute(temp[1], PUBLIC);
+            return getObjectById(requireReturn(temp[0], area_id, layout_id).value).getAttribute(temp[1],layout_id);
         }
     }
     static int index=0;
