@@ -70,7 +70,7 @@ public class DFunction {
                     int index=0;
                     ArrayList<Variable> list=new ArrayList<>();
                     if(obj!=null) {
-                        Variable v=createVariable(obj.getType() + "$", "self", obj.getId(), 1, 0);
+                        Variable v=createVariable(obj.getType() + "$", "self", obj.getId(), 0, PRIVATE);
                         vars.add(v);
                         list.add(v);
                     }
