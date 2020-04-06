@@ -14,6 +14,7 @@ public class DRuntime {
     public static DComplier comp;
     public static HashMap<String,Thread> thrs=new HashMap<>();
     public static void solveKeyword(String code,String line,int index,int area_id,int layout_id){
+        File file_=new File(comp.getFileAbsolutePath());
         if(line.matches("^(if|unless)\\s*\\(.+\\)\\s*\\{.*}")) {
             ParamIns condition = requireReturn(line.substring(indexOf(line, '(') + 1, indexOf(line, ')')),area_id,layout_id);
             String flag=line.substring(0,indexOf(line, '('));
@@ -86,14 +87,13 @@ public class DRuntime {
         }
         if(line.matches("^imp\\s+.+$")){
             String val =line.split("\\s+")[1];
-            File file_=new File(comp.getFileAbsolutePath());
+
             //System.out.println(comp.getFileAbsolutePath());
             File file=new File(file_.getParentFile().getAbsoluteFile()+File.separator+val);
             new DComplier(file).compile(0,0);
         }
         if(line.matches("^imps\\s+.+$")){
             String val =line.split("\\s+")[1];
-            File file_=new File(comp.getFileAbsolutePath());
             File file=new File(file_.getParentFile().getAbsoluteFile()+File.separator+val);
             File[] files=file.listFiles();
             for(File f : files){

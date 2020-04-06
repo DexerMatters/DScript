@@ -51,6 +51,12 @@ public class DObject {
                 }
         }
     }
+    public void reassignAttributeForce(String name,String value,String type,int area_id,int layout_id){
+        for (int i = 0; i < attrs.length; i++) {
+            if(attrs[i].getName().equals(name))
+                attrs[i]=new DAttribute(name,new ParamIns(type,value),attrs[i].getState(),attrs[i].getVisibility());
+        }
+    }
     public ParamIns getAttribute(String name,int layout_id){
         for(DAttribute attr : attrs){
             if(attr.getName().equals(name)&&(attr.getVisibility()==layout_id||layout_id==PRIVATE))

@@ -21,16 +21,24 @@ public class DComplier{
     private int times=0;
     private boolean enabled=true;
     private File file;
+    private static int ins_num=0;
     public static DCode code;
     public static int AREA_ID=0,LAYOUT_ID=0;
     public static DComplier complier=null;
     public DComplier(DCode code){
-        DRuntime.comp=this;
-        complier=this;
+        ins_num++;
+        if(ins_num==1) {
+            DRuntime.comp = this;
+            complier = this;
+        }
         this.code=code;
     }
     public DComplier(File file){
-        DRuntime.comp=this;
+        ins_num++;
+        if(ins_num==1) {
+            DRuntime.comp = this;
+            complier = this;
+        }
         this.file=file;
         StringBuffer sb=new StringBuffer();
         try {

@@ -10,7 +10,7 @@ public class DRegister {
     static{
         DArray.load();
         DTest.load();
-
+        DSystem.load();
     }
     static void registerNativeMethods(Map<String,NativeCode> map_){
         map.putAll(map_);
