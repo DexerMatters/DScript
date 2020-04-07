@@ -78,4 +78,9 @@ public class DTools {
         return ress.toArray(new String[0]);
 
     }
+
+    static boolean isInteger(double s){
+        return Double.toString(s).split("\\.")[1].equals("0");
+    }
 }
+

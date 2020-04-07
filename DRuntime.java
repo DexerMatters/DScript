@@ -12,6 +12,7 @@ import static com.dexer.dscript.DTools.*;
 import static com.dexer.dscript.DVariable.*;
 public class DRuntime {
     public static DComplier comp;
+    public static DComplier comp_now;
     public static HashMap<String,Thread> thrs=new HashMap<>();
     public static void solveKeyword(String code,String line,int index,int area_id,int layout_id){
         File file_=new File(comp.getFileAbsolutePath());
@@ -39,17 +40,18 @@ public class DRuntime {
             String[] conds=split(condition,"~");
             if(conds.length==2) {
                 Variable v = importVariable(conds[0], area_id, layout_id);
-                int from = Integer.parseInt(v.value);
-                int to = Integer.parseInt(requireReturn(conds[1],area_id,layout_id).value);
+
+                double from = Double.parseDouble(v.value);
+                double to = Double.parseDouble(requireReturn(conds[1],area_id,layout_id).value);
                 if(from<to) {
-                    for (int i = from; i <= to; i++) {
-                        reassignToVal(v, v.type, Integer.toString(i), area_id, layout_id);
+                    for (double i = from; i <= to; i++) {
+                        reassignToVal(v, v.type, Double.toString(i), area_id, layout_id);
                         DCode runs = new DCode(code_strs);
                         new DComplier(runs).compile(area_id, layout_id);
                     }
                 }else{
-                    for (int i = from; i >= to; i--) {
-                        reassignToVal(v, v.type, Integer.toString(i), area_id, layout_id);
+                    for (double i = from; i >= to; i--) {
+                        reassignToVal(v, v.type, Double.toString(i), area_id, layout_id);
                         DCode runs = new DCode(code_strs);
                         new DComplier(runs).compile(area_id, layout_id);
                     }
@@ -83,7 +85,7 @@ public class DRuntime {
         if(line.matches("^ret\\s+.+$")){
             String val =line.split("\\s+")[1];
             importVariable("var __return="+val,1,layout_id);
-            comp.close();
+            comp_now.close();
         }
         if(line.matches("^imp\\s+.+$")){
             String val =line.split("\\s+")[1];

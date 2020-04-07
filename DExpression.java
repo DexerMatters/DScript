@@ -6,6 +6,8 @@ import java.util.Arrays;
 import static com.dexer.dscript.DFunction.*;
 import static com.dexer.dscript.DReference.*;
 import static com.dexer.dscript.DClass.*;
+import static com.dexer.dscript.DTools.getContentInBracket_;
+import static com.dexer.dscript.DTools.split;
 import static com.dexer.dscript.DVariable.*;
 public class DExpression {
 
@@ -203,6 +205,46 @@ public class DExpression {
             return pis[0];
         }
         return null;
+    }
+    public static ParamIns getArrayExpressionResult(String str,int area_id,int layout_id){
+        String[] s=split(str.substring(1,str.length()-1),",");
+        ParamIns[] ps=new ParamIns[s.length];
+        for(int i=0;i<s.length;i++)
+            ps[i]=requireReturn(s[i],area_id,layout_id);
+        String id=getClassByName("Array").newInstance(new ParamIns[]{new ParamIns("Number",s.length+"")},layout_id);
+        for(int i=0;i<s.length;i++)
+            getObjectById(id).runFunction("set"
+                    ,new ParamIns[]{new ParamIns("Number",i+"")
+                            ,ps[i]},id,layout_id);
+        return new ParamIns("Array",id);
+    }
+    public static ParamIns getArrayEleExpressionResult(String str,int area_id,int layout_id){
+        String[] strs=str.split("");
+        int begin = 0;
+        ArrayList<String> ress=new ArrayList<>();
+        ArrayList<Integer> ress_index=new ArrayList<>();
+        String res="";
+        int mode=0;
+        for(int i=0;i<strs.length;i++){
+
+            if(strs[i].charAt(0)=='['&&getIndexCovered(str,i,BRACLET_CURLY)==0&&mode==0) {
+                mode = 1;
+                ress_index.add(i);
+            }
+            if(strs[i].charAt(0)==']'&&getIndexCovered(str,i,BRACLET_CURLY)==0&&mode==1) {
+                ress.add(res.substring(1));
+
+                mode=0;
+                res="";
+            }
+            if(mode==1)
+                res+=strs[i];
+        };
+        int index=(int)Double.parseDouble(ress.get(ress.size()-1));
+        begin= ress_index.get(ress_index.size() - 1);
+        ParamIns ret=requireReturn(str.substring(0,begin),area_id,layout_id);
+        return getObjectById(ret.value).runFunction("get",new ParamIns[]{new ParamIns("Number",index+"")},ret.value,layout_id);
+
     }
     public static String removeNoteExpressions(String str){
         /*String[] strs=str.split("");

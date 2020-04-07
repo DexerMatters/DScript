@@ -27,6 +27,7 @@ public class DComplier{
     public static DComplier complier=null;
     public DComplier(DCode code){
         ins_num++;
+        DRuntime.comp_now=this;
         if(ins_num==1) {
             DRuntime.comp = this;
             complier = this;
@@ -35,6 +36,7 @@ public class DComplier{
     }
     public DComplier(File file){
         ins_num++;
+        DRuntime.comp_now=this;
         if(ins_num==1) {
             DRuntime.comp = this;
             complier = this;
@@ -101,7 +103,11 @@ public class DComplier{
 
         }
     }
-
+    public void pretreat(){
+        String str=code.getCode();
+        char[] c=BRACLET_CURLY;
+        String[] strs=str.split("");
+    }
     public String getFileAbsolutePath(){
         return file.getAbsolutePath();
     }

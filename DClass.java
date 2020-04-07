@@ -105,14 +105,13 @@ public class DClass{
     }
     static ParamIns runFunction(String str,int area_id,int layout_id){
 
-        if(str.matches("^\\w+\\.\\w+\\(.*\\)$")){
-            String[] strs=str.split("\\.");
-            strs=addBehind(strs,".");
-
+        if(str.matches("^.+\\.\\w+\\(.*\\)$")){
+            String[] strs=split(str,".");
+            strs=addFront(strs,".");
             if(!strs[0].matches("^[\\W\\w_]+$")) return null;
             String params;
             ArrayList<ParamIns> pis=new ArrayList<>();
-            params=getContentInBracket(str,BRACKET_NORMAL);
+            params=getContentInBracket_(str,BRACKET_NORMAL)[getContentInBracket_(str,BRACKET_NORMAL).length-1];
             ParamIns[] array;
             if(params.equals("")) array=new ParamIns[0];
             else {
@@ -120,8 +119,8 @@ public class DClass{
                     pis.add(requireReturn(s.trim(), area_id, layout_id));
                 array = pis.toArray(new ParamIns[0]);
             }
-            Variable v=getVariableByName(strs[0], area_id, layout_id);
-            if(v==null)
+            DClass.Class v=getClassByName(strs[0]);
+            if(v!=null)
                 return getClassByName(strs[0]).runStaticFunction(strs[1].substring(0,indexOf(strs[1],'(')),array,"null",layout_id);
             else{
                 DObject obj=getObjectById(requireReturn(strs[0],area_id,layout_id).value);
@@ -131,18 +130,19 @@ public class DClass{
         }
         return null;
     }
-    static ParamIns getAttribute(String str,int area_id,int layout_id){
+    public static ParamIns getAttribute(String str,int area_id,int layout_id){
         String[] temp=split(str,".");
-        Variable v=getVariableByName(temp[0], area_id, layout_id);
-        if(v==null)
+        temp=addFront(temp,".");
+        Class v=getClassByName(temp[0]);
+        if(v!=null)
             return getClassByName(temp[0]).getAttribute(temp[1],layout_id);
         else {
-            //System.out.println(getObjectById(requireReturn(temp[0], area_id, layout_id).value).getAttribute(temp[1], PUBLIC));
+
             return getObjectById(requireReturn(temp[0], area_id, layout_id).value).getAttribute(temp[1],layout_id);
         }
     }
     static int index=0;
-    static String getTypeOf(String str){
+    public static String getTypeOf(String str){
         index=0;
         if(str.matches("^\".*\"$"))
             return "String";
@@ -152,12 +152,13 @@ public class DClass{
             return "Float";
         if(str.matches("^(true|false)$"))
             return "Boolean";
-        if(str.matches("^[a-zA-Z_]+\\.[a-zA-Z_]+$")) {
+        if(str.matches("^.+\\.[a-zA-Z_]+$"))
             return "attribute";
-        }
-        if(str.matches("^\\[\\$.+\\$]$")) {
+
+        if(str.matches("^\\{.+}$"))
+            return "Array";
+        if(str.matches("^\\[\\$.+\\$]$"))
             return "Object";
-        }
         if(str.matches("^new\\s+[a-zA-Z_]+\\s*\\(.*\\)$"))
             return "objectInstance";
         if(str.matches("^\\w+\\.\\w+\\(.*\\)$"))
@@ -173,18 +174,21 @@ public class DClass{
             return "variable";
         return "expression";
     }
-    static ParamIns requireReturn(String str, int area_id, int layout_id){
+    public static String getObjTypeOf(String str){
+        return getObjectById(str).getType();
+    }
+    public static ParamIns requireReturn(String str, int area_id, int layout_id){
         str=cleanBracket(str);
 
         switch (getTypeOf(str)){
             case "String":
                 return new ParamIns(getTypeOf(str),str);
+            case "Array":
+                return getArrayExpressionResult(str,area_id,layout_id);
             case "Object":
-
-                return new ParamIns(getObjectById(str).getType(),str.substring(1,str.length()-1));
+                return new ParamIns(getObjectById(str).getType(),str);
             case "objectInstance":
-                ParamIns pi=instanceClass(str,area_id,layout_id);
-                return pi;
+                return instanceClass(str,area_id,layout_id);
             case "variable":
                 Variable var= getVariableByName(str, area_id, layout_id);
                 return new ParamIns(var.type,var.value);
@@ -210,6 +214,13 @@ public class DClass{
             s+=str[i]+insert;
         //System.out.println("\\"+s);
         return new String[]{str[0].trim(),s.substring(0,s.length()-1).trim()};
+    }
+    public static String[] addFront(String[] str,String insert){
+        String s="";
+        for(int i=0;i<str.length-1;i++)
+            s+=str[i]+insert;
+        //System.out.println("\\"+s);
+        return new String[]{s.substring(0,s.length()-1).trim(),str[str.length-1].trim()};
     }
     static void createClass(String name){
         cls.add(new Class(name));
