@@ -83,7 +83,7 @@ public class DRuntime {
             removeVariable(getVariableByName(name,area_id,layout_id));
         }
         if(line.matches("^ret\\s+.+$")){
-            String val =line.split("\\s+")[1];
+            String val =addBehind(line.split("\\s+")," ")[1];
             importVariable("var __return="+val,1,layout_id);
             comp_now.close();
         }
