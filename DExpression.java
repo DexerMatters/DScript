@@ -61,9 +61,9 @@ public class DExpression {
                 str.substring(index+2).trim()
         };
         if(requireReturn(strs[0], layout_id, area_id).equals(requireReturn(strs[1], layout_id, area_id)))
-            return new ParamIns("Boolean","true");
+            return new ParamIns("bool","true");
         else
-            return new ParamIns("Boolean","false");
+            return new ParamIns("bool","false");
     }
     public static ParamIns getInequalityResult(String str,int area_id,int layout_id){
         int index=isInequality(str);
@@ -83,15 +83,15 @@ public class DExpression {
         int B=Integer.parseInt(requireReturn(strs[1], layout_id, area_id).value);
 
         if(sym.equals("<="))
-            return new ParamIns("Boolean",Boolean.toString(A<=B));
+            return new ParamIns("bool",Boolean.toString(A<=B));
         else if(sym.equals(">="))
-            return new ParamIns("Boolean",Boolean.toString(A>=B));
+            return new ParamIns("bool",Boolean.toString(A>=B));
         else if(sym.equals("!="))
-            return new ParamIns("Boolean",Boolean.toString(A!=B));
+            return new ParamIns("bool",Boolean.toString(A!=B));
         else if(sym.charAt(0)=='<')
-            return new ParamIns("Boolean",Boolean.toString(A<B));
+            return new ParamIns("bool",Boolean.toString(A<B));
         else if(sym.charAt(0)=='>')
-            return new ParamIns("Boolean",Boolean.toString(A>B));
+            return new ParamIns("bool",Boolean.toString(A>B));
         return null;
     }
     public static ParamIns getExpressionResult(String str,int area_id,int layout_id){
@@ -100,13 +100,13 @@ public class DExpression {
            String temp=cleanBracket(str.substring(1));
 
            ParamIns pi=requireReturn(temp,area_id,layout_id);
-           if(pi.type.equals("Boolean")) {
-               return new ParamIns("Boolean",Boolean.toString(!Boolean.parseBoolean(pi.value)));
+           if(pi.type.equals("bool")) {
+               return new ParamIns("bool",Boolean.toString(!Boolean.parseBoolean(pi.value)));
            }else
                return null;
        }
        else if((value=assignVariableAs(str,area_id,layout_id)) != null){
-           return new ParamIns("Number",value);
+           return new ParamIns("num",value);
        }
 //       if(str.matches("^\\(\\w+\\)\\s*.+$")){
 //           String type_casted=str.substring(1,str.indexOf(")"));
@@ -151,7 +151,7 @@ public class DExpression {
        }
        else if(str.matches("^.+\\[.+]$")){
             String[] v=anaylzeArrayGetter(str,area_id,layout_id);
-            return getObjectById(v[0]).runFunction("get",new ParamIns[]{new ParamIns("Number",v[1])},v[0],PUBLIC);
+            return getObjectById(v[0]).runFunction("get",new ParamIns[]{new ParamIns("num",v[1])},v[0],PUBLIC);
        }
        else return DMathExpression.solveMathExpression(str.trim(),area_id,layout_id);
        return null;
@@ -222,10 +222,10 @@ public class DExpression {
         ParamIns[] ps=new ParamIns[s.length];
         for(int i=0;i<s.length;i++)
             ps[i]=requireReturn(s[i],area_id,layout_id);
-        String id=getClassByName("Array").newInstance(new ParamIns[]{new ParamIns("Number",s.length+"")},layout_id);
+        String id=getClassByName("Array").newInstance(new ParamIns[]{new ParamIns("num",s.length+"")},layout_id);
         for(int i=0;i<s.length;i++)
             getObjectById(id).runFunction("set"
-                    ,new ParamIns[]{new ParamIns("Number",i+"")
+                    ,new ParamIns[]{new ParamIns("num",i+"")
                             ,ps[i]},id,layout_id);
         return new ParamIns("Array",id);
     }
@@ -249,12 +249,12 @@ public class DExpression {
             return str;
     }
     private static ParamIns bool_and(ParamIns A,ParamIns B){
-        return new ParamIns("Boolean",Boolean.toString(Boolean.parseBoolean(A.value)&&Boolean.parseBoolean(B.value)));
+        return new ParamIns("bool",Boolean.toString(Boolean.parseBoolean(A.value)&&Boolean.parseBoolean(B.value)));
     }
     private static ParamIns bool_or(ParamIns A,ParamIns B){
-        return new ParamIns("Boolean",Boolean.toString(Boolean.parseBoolean(A.value)||Boolean.parseBoolean(B.value)));
+        return new ParamIns("bool",Boolean.toString(Boolean.parseBoolean(A.value)||Boolean.parseBoolean(B.value)));
     }
     private static ParamIns bool_xor(ParamIns A,ParamIns B){
-        return new ParamIns("Boolean",Boolean.toString(Boolean.logicalXor(Boolean.parseBoolean(A.value),Boolean.parseBoolean(B.value))));
+        return new ParamIns("bool",Boolean.toString(Boolean.logicalXor(Boolean.parseBoolean(A.value),Boolean.parseBoolean(B.value))));
     }
 }

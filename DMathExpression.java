@@ -39,7 +39,7 @@ public class DMathExpression {
             Scope scope=new Scope();
             Expression exp_= Parser.parse(exp);
             double res=exp_.evaluate();
-            pii=new DFunction.ParamIns("Number",res+"");
+            pii=new DFunction.ParamIns("num",res+"");
 
         } catch (ParseException e) {
             e.printStackTrace();

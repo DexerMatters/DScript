@@ -23,7 +23,7 @@ public class DTest{
             @Override
             public DFunction.ParamIns run(DFunction.ParamIns[] pi, String id) {
                 DObject obj=getObjectById(id);
-                ParamIns ins=obj.getAttribute("str",DFunction.PUBLIC);
+                ParamIns ins=obj.getAttribute("string",DFunction.PUBLIC);
                 StringBuilder sb=new StringBuilder(ins.value.substring(1,ins.value.length()-1));
                 System.out.println(sb.insert(2,pi[0].value.substring(1,pi[0].value.length()-1)).toString());
                 return null;

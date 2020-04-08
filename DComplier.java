@@ -17,13 +17,10 @@ public class DComplier{
                     "   Github:    https://github.com/DexerMatters/DScript\n" +
                     "   Contact:  2353708378@qq.com or DexerMatters@gmail.com"+
             "\n//////////////////";
-    private DNode main_node=new DNode();
-    private int times=0;
     private boolean enabled=true;
     private File file;
     private static int ins_num=0;
     public static DCode code;
-    public static int AREA_ID=0,LAYOUT_ID=0;
     public static DComplier complier=null;
     public DComplier(DCode code){
         ins_num++;

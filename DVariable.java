@@ -60,7 +60,7 @@ public class DVariable{
             DFunction.ParamIns vic=requireReturn(strs[1],area_id,layout_id);
             if(strs[0].indexOf('[')!=-1){
                 String[] v=anaylzeArrayGetter(strs[0],area_id,layout_id);
-                getObjectById(v[0]).runFunction("set",new DFunction.ParamIns[]{new DFunction.ParamIns("Number",v[1]),new DFunction.ParamIns(vic.type,vic.value)},v[0],PUBLIC);
+                getObjectById(v[0]).runFunction("set",new DFunction.ParamIns[]{new DFunction.ParamIns("num",v[1]),new DFunction.ParamIns(vic.type,vic.value)},v[0],PUBLIC);
             } else if (strs[0].indexOf('.') == -1) {
                 if(tar.type.equals("Null")) tar.type=vic.type;
                 reassignToVal(tar, vic.type, vic.value, area_id, layout_id);
@@ -79,9 +79,9 @@ public class DVariable{
             String temp=cleanBracket(str.substring(0,str.length()-2).trim());
             String sym=str.substring(str.length()-2).trim();
             Variable v=getVariableByName(temp,area_id,layout_id);
-            if(v.type.equals("Number")) {
+            if(v.type.equals("num")) {
                 int del= sym.equals("++")?1:-1;
-                reassignToVal(v, "Number", String.valueOf(Integer.parseInt(v.value) + del), area_id, layout_id);
+                reassignToVal(v, "num", String.valueOf(Integer.parseInt(v.value) + del), area_id, layout_id);
                 return getVariableByName(temp,area_id,layout_id).value;
             }
             else new DError(comp,"type");
@@ -90,10 +90,10 @@ public class DVariable{
             String temp=str.substring(2).trim();
             String sym=str.substring(0,2).trim();
             Variable v=getVariableByName(temp,area_id,layout_id);
-            if(v.type.equals("Number")) {
+            if(v.type.equals("num")) {
                 int del= sym.equals("++")?1:-1;
                 String v_=v.value;
-                reassignToVal(v, "Number", String.valueOf(Integer.parseInt(v.value) + del), area_id, layout_id);
+                reassignToVal(v, "num", String.valueOf(Integer.parseInt(v.value) + del), area_id, layout_id);
                 return v_;
             }
             else new DError(comp,"type");

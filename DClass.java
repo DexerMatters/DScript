@@ -144,17 +144,16 @@ public class DClass{
     static int index=0;
     public static String getTypeOf(String str){
         index=0;
-        if(str.matches("^\".*\"$"))
+        if(str.matches("^\".*\"s$"))
             return "String";
+        if(str.matches("^\".*\"$"))
+            return "string";
         if(str.matches("^-?[0-9]+\\.*[0-9]+$"))
-            return "Number";
-        if(str.matches("^-?[0-9]+\\.[0-9]+$"))
-            return "Float";
+            return "num";
         if(str.matches("^(true|false)$"))
-            return "Boolean";
+            return "bool";
         if(str.matches("^.+\\.[a-zA-Z_]+$"))
             return "attribute";
-
         if(str.matches("^\\{.+}$"))
             return "Array";
         if(str.matches("^\\[\\$.+\\$]$"))
@@ -181,8 +180,11 @@ public class DClass{
         str=cleanBracket(str);
 
         switch (getTypeOf(str)){
-            case "String":
+            case "string":
                 return new ParamIns(getTypeOf(str),str);
+            case "String":
+                String id=getClassByName("String").newInstance(new ParamIns[]{new ParamIns("string",str.substring(0,str.length()-1))},layout_id);
+                return requireReturn(id,area_id,layout_id);
             case "Array":
                 return getArrayExpressionResult(str,area_id,layout_id);
             case "Object":
