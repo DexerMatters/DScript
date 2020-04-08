@@ -6,6 +6,7 @@ import java.util.Arrays;
 import static com.dexer.dscript.DFunction.*;
 import static com.dexer.dscript.DReference.*;
 import static com.dexer.dscript.DClass.*;
+import static com.dexer.dscript.DTools.getContentInBracket;
 import static com.dexer.dscript.DTools.getContentInBracket_;
 import static com.dexer.dscript.DTools.split;
 import static com.dexer.dscript.DVariable.*;
@@ -148,8 +149,18 @@ public class DExpression {
                         return requireReturn(condition.substring(0,isInequality(condition)),area_id,layout_id);
             }
        }
+       else if(str.matches("^.+\\[.+]$")){
+            String[] v=anaylzeArrayGetter(str,area_id,layout_id);
+            return getObjectById(v[0]).runFunction("get",new ParamIns[]{new ParamIns("Number",v[1])},v[0],PUBLIC);
+       }
        else return DMathExpression.solveMathExpression(str.trim(),area_id,layout_id);
        return null;
+    }
+    public static String[] anaylzeArrayGetter(String str,int area_id,int layout_id){
+        String[] valStrs=getContentInBracket_(str,new char[]{'[',']'});
+        String valStr=valStrs[valStrs.length-1];
+        String left=requireReturn(str.substring(0,str.length()-valStr.length()-2),area_id,layout_id).value;
+        return new String[]{left,valStr};
     }
     public static Integer[] isBoolExpressionResult(String str){
         ArrayList<Integer> ar=new ArrayList<>();

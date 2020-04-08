@@ -2,6 +2,8 @@ package com.dexer.dscript;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import static com.dexer.dscript.DFunction.PUBLIC;
 import static com.dexer.dscript.DRes.*;
 import static com.dexer.dscript.DReference.*;
 import static com.dexer.dscript.DClass.*;
@@ -51,12 +53,15 @@ public class DVariable{
         return var;
     }
     static void assignVariable(String str, int area_id,int layout_id) {
-        if (str.matches("^[\\W\\w_\\d.]+\\s*=\\s*.+$")) {
+        if (str.matches("^[\\W\\w_\\d.\\[\\]]+\\s*=\\s*.+$")) {
             String[] strs = addBehind(str.split("="), "=");
             if(strs[0].contains("var")||strs[0].contains("con")) return;
             Variable tar=getVariableByName(strs[0], area_id, layout_id);
             DFunction.ParamIns vic=requireReturn(strs[1],area_id,layout_id);
-            if (strs[0].indexOf('.') == -1) {
+            if(strs[0].indexOf('[')!=-1){
+                String[] v=anaylzeArrayGetter(strs[0],area_id,layout_id);
+                getObjectById(v[0]).runFunction("set",new DFunction.ParamIns[]{new DFunction.ParamIns("Number",v[1]),new DFunction.ParamIns(vic.type,vic.value)},v[0],PUBLIC);
+            } else if (strs[0].indexOf('.') == -1) {
                 if(tar.type.equals("Null")) tar.type=vic.type;
                 reassignToVal(tar, vic.type, vic.value, area_id, layout_id);
             }else {
@@ -64,9 +69,8 @@ public class DVariable{
                 Variable v = getVariableByName(temp[0], 0, 0);
                 if (v == null) {
                     getClassByName(temp[0]).reassignAttribute(temp[1], requireReturn(strs[1], area_id, layout_id).value);
-                } else {
+                } else
                     getObjectById(requireReturn(temp[0], area_id, layout_id).value).reassignAttribute(temp[1], requireReturn(strs[1], area_id, layout_id).value, area_id, layout_id);
-                }
             }
         }
     }

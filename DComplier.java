@@ -103,11 +103,7 @@ public class DComplier{
 
         }
     }
-    public void pretreat(){
-        String str=code.getCode();
-        char[] c=BRACLET_CURLY;
-        String[] strs=str.split("");
-    }
+
     public String getFileAbsolutePath(){
         return file.getAbsolutePath();
     }
